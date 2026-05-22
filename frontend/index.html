@@ -163,6 +163,38 @@
         .light .theme-icon-sun { display: block; }
         .light .theme-icon-moon { display: none; }
     </style>
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .panel-glass { animation: fadeInUp 0.5s ease both; }
+    .panel-glass:nth-child(1) { animation-delay: 0.1s; }
+
+    /* Hamburger */
+    .hamburger { display: none; background: none; border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; padding: 8px; border-radius: 4px; transition: all 0.2s; }
+    .hamburger:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+    .hamburger svg { width: 20px; height: 20px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .hamburger { display: flex !important; align-items: center; justify-content: center; }
+      .nav-links { display: none !important; position: fixed; top: 68px; left: 0; right: 0; background: var(--ink-mid); flex-direction: column !important; padding: 16px 24px; border-bottom: 1px solid var(--border); gap: 12px !important; z-index: 99; }
+      .nav-links.open { display: flex !important; }
+      .light .nav-links { background: var(--ink-mid); }
+      nav { padding: 0 12px !important; }
+      .nav-right { gap: 12px !important; min-width: auto !important; }
+      .sidebar-wrapper { display: none !important; }
+      main { padding: 16px !important; }
+      .panel-glass { padding: 16px !important; }
+      .grid-cols-2 { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 480px) {
+      nav { padding: 0 8px !important; height: 56px !important; }
+      .nav-logo { min-width: auto !important; }
+      .nav-logo-text { font-size: 0.9rem !important; }
+      h1 { font-size: 1.2rem !important; }
+      .panel-glass { padding: 12px !important; }
+      main { padding: 12px !important; }
+    }
 </head>
 <body class="flex flex-col h-screen">
 
@@ -173,6 +205,8 @@
             <img src="logo_night.jpg" alt="Arbitra" class="dark-logo w-5 h-5 object-contain rounded-[3px]">
             <span class="nav-logo-text">Arbitra<span> AI</span></span>
         </a>
+
+        <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></button>
 
         <ul class="nav-links">
             <li><a href="/landing">Asosiy</a></li>
@@ -295,6 +329,16 @@
         // Logic for login modal could go here, or just redirect
         alert("Kirish sahifasi tez kunda...");
     }
+
+    /* ─── MOBILE MENU ─── */
+    function toggleMobileMenu() {
+      document.querySelector('.nav-links').classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (window.innerWidth <= 768 && !e.target.closest('nav')) {
+        document.querySelector('.nav-links')?.classList.remove('open');
+      }
+    });
 </script>
 </body>
 </html>

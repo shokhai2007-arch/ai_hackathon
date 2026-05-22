@@ -44,6 +44,33 @@
         }
         h1, h2 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; tracking: 0.1em; }
         .mono { font-family: 'Space Mono', monospace; }
+/* ─── ANIMATIONS ─── */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.anim-fade-in { animation: fadeIn 0.5s ease forwards; }
+.anim-fade-up { animation: fadeInUp 0.5s ease forwards; }
+.anim-slide-up { animation: slideUp 0.6s ease forwards; }
+.panel-glass { animation: fadeInUp 0.5s ease both; }
+.panel-glass:nth-child(1) { animation-delay: 0.1s; }
+.panel-glass:nth-child(2) { animation-delay: 0.2s; }
+.panel-glass:nth-child(3) { animation-delay: 0.3s; }
+.panel-glass:nth-child(4) { animation-delay: 0.4s; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  body { padding: 16px !important; }
+  h1 { font-size: 1.5rem !important; }
+  .grid { gap: 16px !important; }
+  .h-64 { height: 200px !important; }
+  .panel-glass { padding: 16px !important; }
+}
+@media (max-width: 480px) {
+  body { padding: 12px !important; }
+  h1 { font-size: 1.2rem !important; }
+  .max-w-6xl > div:first-child { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+  .h-64 { height: 180px !important; }
+}
     </style>
 </head>
 <body>

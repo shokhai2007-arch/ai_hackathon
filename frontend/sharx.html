@@ -191,6 +191,40 @@
         }
         .sidebar-tab-btn:hover { background: var(--sidebar-hover); color: var(--text-main); }
         .sidebar-tab-btn.active { color: var(--gold); background: rgba(0, 240, 255, 0.05); }
+
+        /* ─── ANIMATIONS ─── */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.panel-glass { animation: fadeInUp 0.4s ease both; }
+
+/* Hamburger */
+.hamburger { display: none; background: none; border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; padding: 8px; border-radius: 4px; transition: all 0.2s; }
+.hamburger:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.hamburger svg { width: 20px; height: 20px; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .hamburger { display: flex !important; align-items: center; justify-content: center; }
+  .nav-links { display: none !important; }
+  nav .items-center.gap-8 > a:last-child { display: none !important; }
+  nav { padding: 0 12px !important; }
+  .nav-logo { min-width: auto !important; }
+  .sidebar-wrapper { display: none !important; }
+  main { padding: 8px !important; gap: 8px !important; }
+  .lg\\:grid-cols-8 { grid-template-columns: repeat(4, 1fr) !important; }
+  .flex-1.flex.gap-4.min-h-0 { flex-direction: column !important; }
+  .flex-1.flex.gap-4.min-h-0 > div:last-child { width: 100% !important; }
+  .panel-glass.p-3 { padding: 8px !important; }
+  #stockTicker { font-size: 1rem !important; }
+}
+@media (max-width: 480px) {
+  nav { padding: 0 8px !important; height: 56px !important; }
+  .nav-logo-text { font-size: 0.9rem !important; }
+  .lg\\:grid-cols-8 { grid-template-columns: repeat(2, 1fr) !important; }
+  #headerContent > div:first-child { display: none !important; }
+  #headerContent .h-8 { display: none !important; }
+  .panel-glass.p-3 .Orbitron.text-xs { font-size: 9px !important; }
+}
     </style>
 </head>
 <body class="flex flex-col h-screen">
@@ -203,6 +237,8 @@
                 <img src="logo_night.jpg" alt="Arbitra" class="dark-logo w-5 h-5 object-contain rounded-[3px]">
                 <span class="nav-logo-text">Arbitra<span> AI</span></span>
             </a>
+
+            <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></button>
             
             <ul class="nav-links hidden xl:flex">
                 <li><a href="/landing">Asosiy</a></li>
