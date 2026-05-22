@@ -1,0 +1,801 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistent — Arbitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #ffffff;
+            --sidebar-hover: #f3f4f6;
+            --sidebar-active: #0d9488;
+            --sidebar-text: #6b7280;
+            --sidebar-text-active: #111827;
+            --gold:        #C9A84C;
+            --gold-light:  #E8D5A0;
+            --gold-dim:    #8a6e2f;
+            --ink:         #111318;
+            --surface:     #F7F6F2;
+            --panel:       #FFFFFF;
+            --border:      #E5E3DC;
+            --muted:       #9B9690;
+            --accent:      #2E6B4F;
+            --accent-soft: #EAF2ED;
+            --user-bg:     #1C3328;
+            --user-text:   #E8F3EC;
+            --radius-lg:   16px;
+            --radius-md:   10px;
+            --radius-sm:   6px;
+            --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+            --shadow-md:   0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+            --font-body:   'DM Sans', sans-serif;
+            --font-mono:   'DM Mono', monospace;
+            --font-serif:  'Playfair Display', serif;
+        }
+        .dark {
+            --sidebar-bg: #080e1a;
+            --sidebar-hover: #111d33;
+            --sidebar-active: #14b8a6;
+            --sidebar-text: #475569;
+            --sidebar-text-active: #f1f5f9;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-body);
+            background: var(--surface);
+            color: var(--ink);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+
+        input, textarea, .selectable { user-select: text; -webkit-user-select: text; }
+
+        /* ── Layout ────────────────────────────────── */
+        .app {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ── Sidebar (shared dark style) ──────────── */
+        .gold-text { color: #eab308; text-shadow: 0px 2px 4px rgba(0,0,0,0.1); }
+        .dark .gold-text { color: #facc15; text-shadow: 0px 2px 8px rgba(250,204,21,0.3); }
+        .layout-sidebar { background: var(--sidebar-bg); }
+        .sidebar-wrapper { flex-shrink: 0; position: relative; z-index: 20; }
+        .sidebar-wrapper::after {
+            content: '';
+            position: absolute;
+            left: 56px;
+            top: 0;
+            width: 40px;
+            height: 100%;
+        }
+        .sidebar-text-label {
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+        .sidebar-collapsed .sidebar-text-label {
+            opacity: 0;
+            visibility: hidden;
+            transition-delay: 0s;
+        }
+        .sidebar-expanded .sidebar-text-label {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0.05s;
+        }
+        .sidebar-collapsed { width: 56px !important; }
+        .sidebar-expanded { width: 200px !important; }
+        .nav-icon, .theme-icon-wrapper, #settingsPanel .theme-icon-wrapper { pointer-events: none; }
+        .sidebar-collapsed .sidebar-collapsed-show { display: block !important; }
+        .sidebar-collapsed .logo-dark { display: none !important; }
+        .dark .sidebar-collapsed .logo-light { display: none !important; }
+        .dark .sidebar-collapsed .logo-dark { display: block !important; }
+        #settingsPanel {
+            position: fixed;
+            width: 140px;
+            z-index: 100;
+            border-radius: 8px;
+            padding: 8px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-subtle, #e2e8f0);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .lang-btn {
+            flex: 1;
+            padding: 4px 0;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: var(--sidebar-text);
+            background: transparent;
+            border: none;
+        }
+        .lang-btn:hover { background: var(--sidebar-hover); }
+        .lang-btn.active { background: var(--sidebar-active); color: #fff; }
+        .scroll-thin::-webkit-scrollbar { width: 3px; }
+        .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+        .scroll-thin::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 2px; }
+        .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+
+        .nav-item {
+            color: var(--sidebar-text, #64748b);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .nav-item:hover { color: var(--sidebar-text-active, #f1f5f9); background: var(--sidebar-hover, #1a2744); }
+        .nav-item.active { color: var(--sidebar-text-active, #f1f5f9); }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 50%;
+            transform: translateY(-50%);
+            width: 3px; height: 24px;
+            background: var(--sidebar-active, #0d9488);
+            border-radius: 0 3px 3px 0;
+            box-shadow: 0 0 8px var(--sidebar-active, #0d9488);
+        }
+        .theme-icon-wrapper {
+            position: relative;
+            width: 20px; height: 20px;
+            flex-shrink: 0;
+        }
+        .theme-icon-wrapper svg {
+            position: absolute;
+            inset: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+        .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+        .moon-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+        .dark .sun-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+        .dark .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+        .theme-toggle-btn .theme-icon-wrapper svg {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+        }
+        .theme-toggle-btn.spinning .theme-icon-wrapper svg {
+            animation: theme-spin 0.5s ease;
+        }
+        @keyframes theme-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(0.3); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .ai-badge {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+        }
+        /* ── Main ──────────────────────────────────── */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Header ────────────────────────────────── */
+        .topbar {
+            height: 56px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 9px;
+            border-radius: 100px;
+            background: #F0EFEB;
+            color: var(--muted);
+            transition: background .3s, color .3s;
+        }
+        .status-pill.ready {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: .7;
+        }
+        .status-pill.loading .status-dot {
+            animation: pulse-dot 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: .3; transform: scale(.8); }
+            50%       { opacity: 1;  transform: scale(1.1); }
+        }
+
+        .clear-btn {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--muted);
+            background: none;
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: color .15s, border-color .15s, background .15s;
+            font-family: var(--font-body);
+        }
+        .clear-btn:hover { color: var(--ink); border-color: #ccc; background: var(--surface); }
+
+        /* ── Messages ──────────────────────────────── */
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+        .messages::-webkit-scrollbar { width: 4px; }
+        .messages::-webkit-scrollbar-track { background: transparent; }
+        .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .msg-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            animation: msg-in .25s ease both;
+        }
+        .msg-row.user { flex-direction: row-reverse; }
+
+        @keyframes msg-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 8.5px;
+            font-weight: 500;
+            flex-shrink: 0;
+            border: 1px solid rgba(46,107,79,.12);
+        }
+
+        .bubble {
+            max-width: min(72%, 560px);
+            padding: 12px 16px;
+            font-size: 13.5px;
+            line-height: 1.65;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        .bubble.ai {
+            background: var(--panel);
+            color: var(--ink);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+        .bubble.user {
+            background: var(--user-bg);
+            color: var(--user-text);
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Rich content inside bubbles */
+        .bubble strong { font-weight: 600; }
+        .bubble em { font-style: italic; color: var(--muted); }
+        .bubble br + br { display: block; content: ''; margin-top: 4px; }
+        .bubble ul { list-style: disc; margin-left: 18px; margin-top: 6px; }
+        .bubble li { margin-bottom: 3px; }
+        .bubble table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 8px 0;
+            font-size: 12px;
+            font-family: var(--font-mono);
+        }
+        .bubble td, .bubble th {
+            border: 1px solid var(--border);
+            padding: 5px 10px;
+            text-align: left;
+        }
+        .bubble th { background: var(--surface); font-weight: 600; }
+
+        /* Loading animation */
+        .typing-dots {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+            height: 18px;
+        }
+        .typing-dots span {
+            width: 5px; height: 5px;
+            background: var(--muted);
+            border-radius: 50%;
+            animation: dot-bounce .9s ease-in-out infinite;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: .15s; }
+        .typing-dots span:nth-child(3) { animation-delay: .3s; }
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: translateY(0); opacity: .4; }
+            40%            { transform: translateY(-5px); opacity: 1; }
+        }
+
+        /* ── Input bar ─────────────────────────────── */
+        .input-area {
+            padding: 16px 24px 20px;
+            background: var(--panel);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .input-wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 6px 6px 18px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .input-wrap:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(46,107,79,.08);
+        }
+
+        #chatInput {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-family: var(--font-body);
+            font-size: 13.5px;
+            color: var(--ink);
+            caret-color: var(--accent);
+        }
+        #chatInput::placeholder { color: var(--muted); }
+
+        .send-btn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: background .2s, transform .1s;
+            background: var(--border);
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+        .send-btn:not(:disabled) {
+            background: var(--accent);
+            color: #fff;
+        }
+        .send-btn:not(:disabled):hover { background: #255c41; }
+        .send-btn:not(:disabled):active { transform: scale(.93); }
+        .send-btn:disabled { cursor: not-allowed; }
+        .send-btn svg { width: 15px; height: 15px; stroke-width: 2.2; }
+
+        /* ── Day divider ───────────────────────────── */
+        .day-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .day-divider::before, .day-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── Dark mode ─────────────────────────────── */
+        .dark {
+            --ink:         #ECEBE5;
+            --surface:     #111318;
+            --panel:       #1A1D24;
+            --border:      #2A2D35;
+            --muted:       #6B6A65;
+            --accent-soft: #1A2E22;
+            --user-bg:     #1C3328;
+            --user-text:   #D4EAD9;
+            --shadow-sm:   0 1px 3px rgba(0,0,0,.3);
+            --shadow-md:   0 4px 12px rgba(0,0,0,.4);
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- Sidebar -->
+    <div class="sidebar-wrapper" id="sidebarWrapper">
+    <aside id="sidebar" class="layout-sidebar flex flex-col items-center py-4 select-none z-20 sidebar-collapsed transition-all duration-300 overflow-hidden">
+        <div class="flex flex-col items-center w-full h-full">
+            <a href="./index.html" class="gold-text font-black text-xl tracking-wider text-center px-3 leading-none cursor-pointer mb-6 flex-shrink-0 no-underline" style="text-decoration:none;">
+                <span class="sidebar-text-label">Arbitra</span>
+                <img src="../logo_fixed.jpg" class="hidden sidebar-collapsed-show logo-light" style="width:32px;height:32px;object-fit:contain;margin:0 auto;">
+                <img src="../logo_night.jpg" class="hidden sidebar-collapsed-show logo-dark" style="width:32px;height:32px;object-fit:contain;margin:0 auto;">
+            </a>
+            <nav class="flex flex-col w-full flex-1 overflow-y-auto scroll-thin px-2 space-y-1" style="background:inherit;">
+                <a href="./aksiyalar.html" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5 flex-shrink-0 nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+                    <span class="sidebar-text-label">Aksiyalar</span>
+                </a>
+                <a href="./AiAssistent.html" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm">
+                    <div class="w-5 h-5 flex-shrink-0 rounded-full border-2 border-current flex items-center justify-center font-bold text-[9px] tracking-tighter">AI</div>
+                    <span class="sidebar-text-label">AI Assistent</span>
+                </a>
+                <a href="./profil.html" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5 flex-shrink-0 nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+                    <span class="sidebar-text-label">Profil</span>
+                </a>
+            </nav>
+            <div class="mt-auto pt-2 px-2 w-full space-y-1 flex-shrink-0">
+                <button id="settingsBtn" onclick="toggleSettings()" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm w-full">
+                    <svg class="w-5 h-5 flex-shrink-0 nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281Z"/></svg>
+                    <span class="sidebar-text-label">Sozlamalar</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+    </div>
+
+    <!-- Settings Popup -->
+    <div id="settingsPanel" class="hidden">
+        <button onclick="toggleDarkMode(document.getElementById('settingsPanel').querySelector('.theme-toggle-btn'))" class="theme-toggle-btn flex items-center justify-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" style="background:transparent;border:none;cursor:pointer;color:var(--sidebar-text);">
+            <span class="theme-icon-wrapper" style="position:relative;width:20px;height:20px;flex-shrink:0;">
+                <svg class="w-5 h-5 sun-icon" style="position:absolute;inset:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/></svg>
+                <svg class="w-5 h-5 moon-icon" style="position:absolute;inset:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"/></svg>
+            </span>
+        </button>
+        <div class="flex justify-center space-x-1 mt-2">
+            <button onclick="setLang('en')" class="lang-btn" data-lang="en">EN</button>
+            <button onclick="setLang('ru')" class="lang-btn" data-lang="ru">RU</button>
+            <button onclick="setLang('uz')" class="lang-btn" data-lang="uz">UZ</button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="topbar-title">Arbitra AI Assistent</span>
+                <span id="dataStatus" class="status-pill loading">
+                    <span class="status-dot"></span>
+                    Yuklanmoqda
+                </span>
+            </div>
+            <button class="clear-btn" onclick="clearChat()">Tozalash</button>
+        </header>
+
+        <!-- Messages -->
+        <div id="chatMessages" class="messages selectable">
+            <div class="day-divider">Bugun</div>
+
+            <div class="msg-row ai">
+                <div class="avatar">AI</div>
+                <div class="bubble ai">
+                    Salom! Men <strong>Arbitra AI</strong> yordamchisiman.<br><br>
+                    Quyidagi bo'limlar bo'yicha savollaringizga javob bera olaman:<br><br>
+                    📊 <strong>Bozor</strong> — kompaniyalar, tariflar, FAQ<br>
+                    🏷️ <strong>Aksiyalar</strong> — chegirmalar va maxsus takliflar<br>
+                    🌿 <strong>Arbitra</strong> — platforma haqida umumiy ma'lumot<br><br>
+                    <em>Savolingizni yozing, yordam berishga tayyorman.</em>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="input-area">
+            <div class="input-wrap">
+                <input
+                    type="text"
+                    id="chatInput"
+                    class="selectable"
+                    placeholder="Savolingizni yozing..."
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <button id="sendBtn" class="send-btn" disabled onclick="sendMessage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    /* ── Elements ── */
+    const chatInput   = document.getElementById('chatInput');
+    const sendBtn     = document.getElementById('sendBtn');
+    const chatMessages= document.getElementById('chatMessages');
+    const dataStatus  = document.getElementById('dataStatus');
+
+    let siteContext = '';
+
+    /* ── Dark mode ── */
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.documentElement.classList.add('dark');
+    }
+    function toggleDarkMode(btn) {
+        btn.classList.add('spinning');
+        setTimeout(() => btn.classList.remove('spinning'), 500);
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+    }
+    /* ── Data loading ── */
+    async function loadSiteData() {
+        let bozorData;
+        try {
+            const resp = await fetch('./parser/data/bozor_data.json');
+            if (!resp.ok) throw new Error();
+            bozorData = await resp.json();
+        } catch {
+            bozorData = getFallbackData();
+        }
+
+        const promotions = getLocalPromotions();
+        siteContext = buildContext(bozorData, promotions);
+
+        dataStatus.textContent = 'Tayyor';
+        dataStatus.classList.remove('loading');
+        dataStatus.classList.add('ready');
+        const dot = document.createElement('span');
+        dot.className = 'status-dot';
+        dataStatus.prepend(dot);
+    }
+
+    function getFallbackData() {
+        return {
+            site: { name: 'Bozor', description: "Kompaniyalar va tariflar ma'lumotlari", company: 'MULTIBROKER MChJ' },
+            companies: [
+                { name: 'Agrobank',        sector: 'Bank' },
+                { name: 'Kafolat',         sector: "Sug'urta" },
+                { name: 'SQB',             sector: 'Bank' },
+                { name: "Ipak Yo'li",      sector: 'Bank' },
+                { name: 'UNG',             sector: 'Neft va gaz' },
+                { name: 'UzEx',            sector: 'Birja' },
+                { name: 'Qizilqum sement', sector: 'Qurilish' },
+                { name: 'Aloqa',           sector: 'Telekommunikatsiya' }
+            ],
+            plans: [
+                { name: 'Investor', commissions: { stock_listed_buy_sell: '0.31%', broker_stock_listed: '0.63%', stamp_duty: '0.01%' } },
+                { name: 'Treyder', commissions: { stock_listed_buy_sell: '0.31%', broker_stock_listed: '1%',    stamp_duty: '0.01%' } },
+                { name: 'Pro',     commissions: { stock_listed_buy_sell: '0.31%', broker_stock_listed: '1%',    stamp_duty: '0.01%' } }
+            ],
+            faq: [
+                { category: 'Fond bozori', questions: [
+                    { q: 'Fond bozori nima?',             a: 'Fond bozori — moliyaviy bozorning ajralmas qismi.' },
+                    { q: "O'zbekistonda fond birjasi bormi?", a: "Ha, Toshkent RFB 1994-yilda tashkil etilgan." }
+                ]}
+            ]
+        };
+    }
+
+    function getLocalPromotions() {
+        try { return JSON.parse(localStorage.getItem('eco_us_promotions')) || []; }
+        catch { return []; }
+    }
+
+    function buildContext(bozor, promos) {
+        let ctx = "Siz Arbitra tizimining AI yordamchisisiz. Foydalanuvchilarga quyidagi ma'lumotlar asosida yordam bering:\n\n";
+
+        ctx += "=== BOZOR MA'LUMOTLARI ===\n";
+        ctx += `Xizmat: ${bozor.site.name} — ${bozor.site.description}\n`;
+        ctx += `Kompaniya: ${bozor.site.company}\n`;
+
+        ctx += `\n--- Kompaniyalar (${(bozor.companies||[]).length} ta) ---\n`;
+        (bozor.companies||[]).forEach(c => { ctx += `- ${c.name} (${c.sector})\n`; });
+
+        ctx += `\n--- Tarif rejalari (${(bozor.plans||[]).length} ta) ---\n`;
+        (bozor.plans||[]).forEach(p => {
+            ctx += `- ${p.name}: listing aksiyalar komissiyasi ${p.commissions.stock_listed_buy_sell||'N/A'}, broker komissiyasi ${p.commissions.broker_stock_listed||'N/A'}\n`;
+        });
+
+        ctx += `\n--- FAQ (${(bozor.faq||[]).length} ta bo'lim) ---\n`;
+        (bozor.faq||[]).forEach(cat => {
+            ctx += `\n${cat.category}:\n`;
+            (cat.questions||[]).forEach(q => { ctx += `  Savol: ${q.q}\n  Javob: ${q.a}\n`; });
+        });
+
+        ctx += `\n=== AKSIYALAR (${promos.length} ta) ===\n`;
+        if (!promos.length) {
+            ctx += "Hozircha aksiyalar mavjud emas.\n";
+        } else {
+            const statusMap = { active: 'Faol', expired: 'Tugagan', upcoming: 'Kutilmoqda' };
+            promos.forEach(p => {
+                ctx += `- ${p.name} | Chegirma: ${p.discount||0}% | Holati: ${statusMap[p.status]||p.status} | ${p.startDate||''} – ${p.endDate||''} | ${p.description||''}\n`;
+            });
+        }
+
+        ctx += "\n=== Arbitra SAYTI ===\n";
+        ctx += "Arbitra — qishloq xo'jaligi va ekologiya sohasidagi loyihalar uchun dashboard. Sahifalar: Profil, AI Assistent, Bozor, Aksiyalar.\n";
+
+        ctx += "\n\nMUHIM:\n";
+        ctx += "- Savollarga faqat yuqoridagi ma'lumotlar asosida javob bering.\n";
+        ctx += "- Agar ma'lumot yetarli bo'lmasa, \"Kechirasiz, bu haqida ma'lumot topilmadi\" deb ayting.\n";
+        ctx += "- Javoblarni o'zbek tilida bering.\n";
+        ctx += "- Tahlil qilayotganda raqamlar va foizlarni aniq ko'rsating.\n";
+        ctx += "- Aksiyalarni tahlil qilishda ularning holati, chegirma foizi va muddatiga e'tibor bering.\n";
+
+        return ctx;
+    }
+
+    /* ── Input state ── */
+    function updateSendBtn() {
+        const hasText = chatInput.value.trim().length > 0;
+        sendBtn.disabled = !hasText;
+    }
+
+    chatInput.addEventListener('input', updateSendBtn);
+    chatInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
+    });
+
+    /* ── Send ── */
+    async function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        appendMessage('user', text);
+        chatInput.value = '';
+        updateSendBtn();
+
+        const loadId = appendMessage('ai', '__loading__');
+
+        try {
+            const response = await fetch('/api/chat/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text, context: siteContext })
+            });
+            const data = await response.json();
+            removeMessage(loadId);
+            appendMessage('ai', data.reply || data.detail || 'Tizimda xatolik yuz berdi.');
+        } catch {
+            removeMessage(loadId);
+            appendMessage('ai', 'Server bilan bog\'lanishda xatolik. Server 5000-portda ishlayotganligiga ishonch hosil qiling.');
+        }
+    }
+
+    /* ── Render helpers ── */
+    function appendMessage(sender, text) {
+        const id = 'msg-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+        const row = document.createElement('div');
+        row.id = id;
+        row.className = `msg-row ${sender}`;
+
+        const avatar = sender === 'ai'
+            ? `<div class="avatar">AI</div>`
+            : '';
+
+        const content = text === '__loading__'
+            ? `<div class="typing-dots"><span></span><span></span><span></span></div>`
+            : text.replace(/\n/g, '<br>');
+
+        row.innerHTML = `
+            ${avatar}
+            <div class="bubble ${sender} selectable">${content}</div>
+        `;
+
+        chatMessages.appendChild(row);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return id;
+    }
+
+    function removeMessage(id) {
+        document.getElementById(id)?.remove();
+    }
+
+    /* ── Clear ── */
+    function clearChat() {
+        chatMessages.innerHTML = `
+            <div class="day-divider">Bugun</div>
+            <div class="msg-row ai">
+                <div class="avatar">AI</div>
+                <div class="bubble ai selectable">Chat tozalandi. Yangi savolingizni yozing.</div>
+            </div>
+        `;
+    }
+
+    /* ── Boot ── */
+    document.addEventListener('DOMContentLoaded', function () {
+        loadSiteData();
+        initSidebarHover();
+    });
+
+    function initSidebarHover() {
+        const wrapper = document.getElementById('sidebarWrapper');
+        const sidebar = document.getElementById('sidebar');
+        wrapper.addEventListener('mouseenter', function() {
+            sidebar.classList.remove('sidebar-collapsed');
+            sidebar.classList.add('sidebar-expanded');
+        });
+        wrapper.addEventListener('mouseleave', function() {
+            sidebar.classList.remove('sidebar-expanded');
+            sidebar.classList.add('sidebar-collapsed');
+            document.getElementById('settingsPanel').classList.add('hidden');
+        });
+    }
+
+    function toggleSettings() {
+        const panel = document.getElementById('settingsPanel');
+        const btn = document.getElementById('settingsBtn');
+        if (panel.classList.contains('hidden')) {
+            const rect = btn.getBoundingClientRect();
+            panel.style.top = (rect.top - 10) + 'px';
+            panel.style.left = (rect.right + 6) + 'px';
+            panel.classList.remove('hidden');
+        } else {
+            panel.classList.add('hidden');
+        }
+    }
+
+    const savedLang = localStorage.getItem('lang') || 'uz';
+    function setLang(code) {
+        localStorage.setItem('lang', code);
+        document.querySelectorAll('#settingsPanel .lang-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.lang === code);
+        });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        setLang(savedLang);
+    });
+
+    document.addEventListener('click', function(e) {
+        const panel = document.getElementById('settingsPanel');
+        const btn = document.getElementById('settingsBtn');
+        if (!panel.classList.contains('hidden') && !panel.contains(e.target) && !btn.contains(e.target)) {
+            panel.classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>
+ё

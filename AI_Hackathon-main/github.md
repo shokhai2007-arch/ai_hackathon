@@ -1,0 +1,1 @@
+    Umumiy repo  --> https://github.com/alijonov77/AI_Hackathon

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Charts - Arbitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --ink: #0a0a1a;
+            --ink-mid: #12122a;
+            --ink-soft: #1a1a3e;
+            --gold: #00f0ff;
+            --text-main: #e0e0ff;
+            --text-faint: #5555aa;
+            --border: rgba(0,240,255,0.15);
+        }
+        body {
+            background: var(--ink);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            padding: 40px;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 0; opacity: 0.6;
+        }
+        .panel-glass {
+            background: var(--ink-soft);
+            border: 1px solid var(--border);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .panel-glass::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0.3;
+        }
+        h1, h2 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; tracking: 0.1em; }
+        .mono { font-family: 'Space Mono', monospace; }
+    </style>
+</head>
+<body>
+    <div class="max-w-6xl mx-auto relative z-10">
+        <div class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="text-3xl font-black">Demo <span class="text-[var(--gold)]">Analytics</span></h1>
+                <p class="text-[var(--text-faint)] mono text-xs mt-1 uppercase tracking-widest">Platform vizualizatsiyasi namunasi</p>
+            </div>
+            <a href="./aksiyalar.html" class="mono text-[10px] border border-[var(--border)] px-6 py-2 hover:bg-[var(--gold)] hover:text-[var(--ink)] transition-all">ORQAGA</a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="panel-glass">
+                <h2 class="text-sm font-bold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    Agrobank (AGBN)
+                </h2>
+                <div class="h-64">
+                    <canvas id="agroChart"></canvas>
+                </div>
+            </div>
+            <div class="panel-glass">
+                <h2 class="text-sm font-bold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    SQB (SQBB)
+                </h2>
+                <div class="h-64">
+                    <canvas id="sqbChart"></canvas>
+                </div>
+            </div>
+            <div class="panel-glass">
+                <h2 class="text-sm font-bold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+                    Ipak Yo'li (IPAK)
+                </h2>
+                <div class="h-64">
+                    <canvas id="ipakChart"></canvas>
+                </div>
+            </div>
+            <div class="panel-glass">
+                <h2 class="text-sm font-bold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Aloqa (ALOQ)
+                </h2>
+                <div class="h-64">
+                    <canvas id="aloqaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const months = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun'];
+        
+        function createChart(id, label, data, color) {
+            const ctx = document.getElementById(id).getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 300);
+            grad.addColorStop(0, color + '44');
+            grad.addColorStop(1, color + '00');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: color,
+                        backgroundColor: grad,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: color,
+                        pointBorderColor: 'var(--ink)',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'var(--ink-mid)',
+                            titleFont: { family: 'Orbitron', size: 10 },
+                            bodyFont: { family: 'Space Mono', size: 10 },
+                            borderColor: 'var(--border)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: 'var(--text-faint)', font: { family: 'Space Mono', size: 9 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: 'var(--text-faint)', font: { family: 'Space Mono', size: 9 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        createChart('agroChart', 'Agrobank', [5000, 5150, 5100, 5250, 5218, 5300], '#10b981');
+        createChart('sqbChart', 'SQB', [8000, 8100, 8050, 8200, 8155, 8300], '#3b82f6');
+        createChart('ipakChart', 'Ipak Yo\'li', [6000, 6200, 6150, 6300, 6250, 6400], '#f59e0b');
+        createChart('aloqaChart', 'Aloqa', [3000, 3050, 3020, 3100, 3080, 3150], '#a855f7');
+    </script>
+</body>
+</html>

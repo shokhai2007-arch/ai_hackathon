@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aksiyalar - Arbitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --ink: #0a0a1a;
+            --ink-mid: #12122a;
+            --ink-soft: #1a1a3e;
+            --paper: #e8e8ff;
+            --paper-dim: #d0d0f0;
+            --gold: #00f0ff;
+            --gold-light: #5cf0ff;
+            --gold-pale: #c0f0ff;
+            --teal: #b44dff;
+            --teal-dim: #7b2fcc;
+            --red: #ff3366;
+            --red-dim: #cc0033;
+            --text-main: #e0e0ff;
+            --text-dim: #8888bb;
+            --text-faint: #5555aa;
+            --border: rgba(0,240,255,0.15);
+            --border-strong: rgba(0,240,255,0.35);
+
+            --sidebar-bg: var(--ink-mid);
+            --sidebar-hover: var(--ink-soft);
+            --sidebar-active: var(--gold);
+            --sidebar-text: var(--text-dim);
+            --sidebar-text-active: var(--text-main);
+        }
+
+        .light {
+            --ink: #f0f2f8;
+            --ink-mid: #e2e5f0;
+            --ink-soft: #ffffff;
+            --paper: #12122a;
+            --paper-dim: #1a1a3e;
+            --gold: #0088cc;
+            --gold-light: #00a0e8;
+            --gold-pale: #b8ddf0;
+            --teal: #7b2fcc;
+            --teal-dim: #5a1f99;
+            --red: #cc0044;
+            --red-dim: #990033;
+            --text-main: #1a1a3e;
+            --text-dim: #5555aa;
+            --text-faint: #8888bb;
+            --border: rgba(0,136,204,0.2);
+            --border-strong: rgba(0,136,204,0.35);
+
+            --sidebar-bg: var(--ink-mid);
+            --sidebar-hover: var(--ink-soft);
+            --sidebar-active: var(--gold);
+            --sidebar-text: var(--text-dim);
+            --sidebar-text-active: var(--text-main);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--ink);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 0 24px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 10, 26, 0.82);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .light nav { background: rgba(240, 242, 248, 0.82); }
+
+        .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; min-width: 150px; }
+        .nav-logo-text { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--text-main); letter-spacing: -0.02em; }
+        .nav-logo-text span { color: var(--gold); }
+
+        .nav-links { display: flex; gap: 24px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 11px; font-family: 'Orbitron', sans-serif; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+        .search-container { position: relative; width: 300px; }
+        .search-input {
+            width: 100%;
+            background: var(--ink-mid);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px 6px 36px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--gold); }
+        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--text-faint); }
+
+        .nav-right { display: flex; align-items: center; gap: 24px; min-width: 150px; justify-content: flex-end; }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar-wrapper { flex-shrink: 0; position: relative; z-index: 20; }
+        .layout-sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); }
+        .nav-item { 
+            color: var(--sidebar-text); 
+            transition: all 0.2s ease; 
+            position: relative; 
+            cursor: pointer; 
+            border: none; 
+            background: transparent; 
+            display: flex;
+            align-items: center;
+            width: calc(100% - 16px);
+            height: 40px;
+            margin: 0 8px;
+            padding: 0 14px;
+            overflow: hidden;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+        .nav-item:hover { color: var(--sidebar-text-active); background: var(--sidebar-hover); }
+        .nav-item.active { color: var(--sidebar-text-active); background: rgba(0, 240, 255, 0.05); }
+        .nav-item.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            width: 3px; height: 16px; background: var(--sidebar-active);
+            border-radius: 0 3px 3px 0; box-shadow: 0 0 8px var(--sidebar-active);
+        }
+        .sidebar-collapsed { width: 64px !important; }
+        .sidebar-expanded { width: 220px !important; }
+        
+        .nav-item svg, .nav-item .ai-icon, .nav-item div {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidebar-text-label { 
+            margin-left: 14px;
+            transition: opacity 0.2s ease; 
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .sidebar-collapsed .sidebar-text-label { opacity: 0; visibility: hidden; }
+        .sidebar-expanded .sidebar-text-label { opacity: 1; visibility: visible; }
+
+        .sidebar-divider { height: 1px; background: var(--border); margin: 12px 10px; opacity: 0.5; }
+        .sidebar-section-title { 
+            font-size: 8px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.15em; 
+            color: var(--text-faint); 
+            padding: 0 22px; 
+            margin-bottom: 8px; 
+            font-weight: 800; 
+            display: block; 
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .sidebar-collapsed .sidebar-section-title { opacity: 0; }
+
+        /* ─── BUTTONS ─── */
+        .lang-btn {
+            background: none; border: 1px solid var(--border); color: var(--text-dim);
+            font-family: 'Space Mono', monospace; font-size: 0.6rem; padding: 4px 6px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .lang-btn.active, .lang-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+        .theme-toggle-btn {
+            background: none; border: 1px solid var(--border); color: var(--text-dim);
+            cursor: pointer; font-size: 1rem; padding: 8px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; width: 100%; border-radius: 8px;
+        }
+        .theme-toggle-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+        .theme-icon-sun { display: none; }
+        .light .theme-icon-sun { display: block; }
+        .light .theme-icon-moon { display: none; }
+
+        /* ─── CARDS ─── */
+        .card-stock {
+            background: var(--ink-soft);
+            border: 1px solid var(--border-strong);
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-stock:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,240,255,0.1);
+            border-color: var(--gold);
+        }
+        .card-stock::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .card-stock:hover::before { opacity: 1; }
+
+        .fade-in { animation: fadeIn 0.3s ease both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .scroll-thin::-webkit-scrollbar { width: 4px; }
+        .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+        .scroll-thin::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+
+    <!-- NAV -->
+    <nav>
+        <a href="/landing" class="nav-logo">
+            <img src="logo_fixed.jpg" alt="Arbitra" class="light-logo w-5 h-5 object-contain rounded-[3px] hidden">
+            <img src="logo_night.jpg" alt="Arbitra" class="dark-logo w-5 h-5 object-contain rounded-[3px]">
+            <span class="nav-logo-text">Arbitra<span> AI</span></span>
+        </a>
+        
+        <ul class="nav-links">
+            <li><a href="/landing">Asosiy</a></li>
+            <li><a href="./aksiyalar.html" class="active">Aksiyalar</a></li>
+            <li><a href="./AiAssistent.html">AI Assistent</a></li>
+            <li><a href="./profil.html">Profil</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="search-container">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+                <input type="text" id="searchInput" placeholder="Qidirish..." class="search-input">
+            </div>
+            <span id="marketStatus" class="mono text-[9px] text-[var(--text-faint)] border border-[var(--border)] px-2 py-1 rounded uppercase">Yuklanmoqda...</span>
+        </div>
+    </nav>
+
+    <div class="flex flex-1 pt-[68px] overflow-hidden">
+        <!-- SIDEBAR -->
+        <div class="sidebar-wrapper" id="sidebarWrapper">
+            <aside id="sidebar" class="layout-sidebar h-full flex flex-col py-4 select-none sidebar-collapsed transition-all duration-300 overflow-hidden">
+                
+                <!-- Main Nav -->
+                <nav class="flex flex-col w-full space-y-1">
+                    <a href="/landing" class="nav-item flex items-center text-sm">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                        <span class="sidebar-text-label">Asosiy</span>
+                    </a>
+                    <a href="./aksiyalar.html" class="nav-item active flex items-center text-sm">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+                        <span class="sidebar-text-label">Aksiyalar</span>
+                    </a>
+                    <a href="./AiAssistent.html" class="nav-item flex items-center text-sm">
+                        <div class="w-5 h-5 flex-shrink-0 rounded-full border border-current flex items-center justify-center font-bold text-[8px] tracking-tighter">AI</div>
+                        <span class="sidebar-text-label">AI Assistent</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-divider"></div>
+
+                <!-- Sorting Section -->
+                <div class="flex flex-col space-y-1">
+                    <span class="sidebar-section-title">Saralash</span>
+                    <button onclick="setSort('price-asc')" id="sort-price-asc" class="nav-item flex items-center text-xs">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21l3.75-3.75" /></svg>
+                        <span class="sidebar-text-label">Arzon narxlar</span>
+                    </button>
+                    <button onclick="setSort('price-desc')" id="sort-price-desc" class="nav-item flex items-center text-xs">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12" /></svg>
+                        <span class="sidebar-text-label">Qimmat narxlar</span>
+                    </button>
+                    <button onclick="setSort('change-desc')" id="sort-gainers" class="nav-item flex items-center text-xs">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" /></svg>
+                        <span class="sidebar-text-label">Eng ko'p o'sgan</span>
+                    </button>
+                    <button onclick="setSort('change-asc')" id="sort-losers" class="nav-item flex items-center text-xs">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.306-4.306a11.95 11.95 0 0 1 5.814 5.519l2.74 1.22m0 0-5.94 2.281m5.94-2.28-2.28 5.941" /></svg>
+                        <span class="sidebar-text-label">Eng ko'p tushgan</span>
+                    </button>
+                </div>
+
+                <div class="sidebar-divider"></div>
+
+                <!-- Filters Section -->
+                <div class="flex flex-col space-y-1">
+                    <span class="sidebar-section-title">Filtr</span>
+                    <button onclick="setFilter('all')" id="filter-all" class="nav-item active flex items-center text-xs">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                        <span class="sidebar-text-label">Barcha aksiyalar</span>
+                    </button>
+                    <button onclick="setFilter('up')" id="filter-up" class="nav-item flex items-center text-xs">
+                        <svg class="w-4 h-4 flex-shrink-0 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l7.5-7.5 7.5 7.5m-15 6l7.5-7.5 7.5 7.5" /></svg>
+                        <span class="sidebar-text-label">Faqat o'sayotgan</span>
+                    </button>
+                    <button onclick="setFilter('down')" id="filter-down" class="nav-item flex items-center text-xs">
+                        <svg class="w-4 h-4 flex-shrink-0 text-[var(--red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" /></svg>
+                        <span class="sidebar-text-label">Faqat tushayotgan</span>
+                    </button>
+                </div>
+
+                <div class="mt-auto px-2 space-y-2">
+                    <div class="flex justify-center gap-1 sidebar-text-label px-2">
+                        <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+                        <button class="lang-btn" onclick="setLang('ru')">RU</button>
+                        <button class="lang-btn" onclick="setLang('en')">EN</button>
+                    </div>
+                    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">
+                        <svg class="theme-icon-sun w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg class="theme-icon-moon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 flex flex-col overflow-hidden relative z-10">
+            <div class="flex-1 overflow-y-auto p-6 scroll-thin">
+                <div class="flex items-end justify-between mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold tracking-tighter Orbitron uppercase">Aksiyalar <span class="text-[var(--gold)]">Bozori</span></h2>
+                        <p class="text-[var(--text-dim)] text-sm mt-1">O'zbekiston fond birjasidagi real vaqt kotirovkalari</p>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="text-right">
+                            <p class="text-[var(--text-faint)] text-[9px] uppercase font-bold mono tracking-widest">Jami aksiyalar</p>
+                            <p id="totalCount" class="text-2xl font-bold Orbitron text-[var(--gold)]">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectorsContainer"></div>
+                
+                <!-- Empty state -->
+                <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-[var(--text-faint)]">
+                    <svg class="w-12 h-12 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                    <p class="Orbitron text-xs tracking-widest">Ma'lumot topilmadi</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let allStocks = [];
+        let currentSort = 'name-asc';
+        let currentFilter = 'all';
+
+        async function loadData() {
+            try {
+                const resp = await fetch('./parser/data/bozor_data.json');
+                const data = await resp.json();
+                allStocks = data.stocks || [];
+                document.getElementById('totalCount').textContent = allStocks.length;
+                document.getElementById('marketStatus').textContent = "Bozor: " + (data.lastUpdated || '--');
+            } catch {
+                document.getElementById('marketStatus').textContent = "Xatolik!";
+            }
+            renderSectors();
+        }
+
+        function setSort(mode) {
+            currentSort = mode;
+            document.querySelectorAll('[id^="sort-"]').forEach(el => el.classList.remove('active'));
+            const activeEl = document.getElementById(`sort-${mode}`) || document.getElementById(mode === 'change-desc' ? 'sort-gainers' : 'sort-losers');
+            if (activeEl) activeEl.classList.add('active');
+            renderSectors();
+        }
+
+        function setFilter(mode) {
+            currentFilter = mode;
+            document.querySelectorAll('[id^="filter-"]').forEach(el => el.classList.remove('active'));
+            document.getElementById(`filter-${mode}`).classList.add('active');
+            renderSectors();
+        }
+
+        function renderSectors() {
+            const container = document.getElementById('sectorsContainer');
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            // 1. Filter
+            let filtered = allStocks.filter(s => {
+                const matchesSearch = s.name.toLowerCase().includes(search) || 
+                                    s.ticker.toLowerCase().includes(search) || 
+                                    (s.sector && s.sector.toLowerCase().includes(search));
+                
+                if (!matchesSearch) return false;
+
+                if (currentFilter === 'up') return s.changePercent > 0;
+                if (currentFilter === 'down') return s.changePercent < 0;
+                return true;
+            });
+
+            // 2. Sort
+            filtered.sort((a, b) => {
+                if (currentSort === 'price-asc') return a.price - b.price;
+                if (currentSort === 'price-desc') return b.price - a.price;
+                if (currentSort === 'change-asc') return a.changePercent - b.changePercent;
+                if (currentSort === 'change-desc') return b.changePercent - a.changePercent;
+                return a.name.localeCompare(b.name);
+            });
+
+            // 3. Group by sectors
+            const groups = {};
+            const sectorOrder = [];
+            filtered.forEach(s => {
+                const sec = s.sector || "Boshqa";
+                if (!groups[sec]) {
+                    groups[sec] = { name: sec, stocks: [] };
+                    sectorOrder.push(sec);
+                }
+                groups[sec].stocks.push(s);
+            });
+
+            const hasResults = sectorOrder.length > 0;
+            document.getElementById('emptyState').classList.toggle('hidden', hasResults);
+
+            container.innerHTML = sectorOrder.map((sec, gi) => {
+                const g = groups[sec];
+                return `
+                <div class="mb-12 fade-in" style="animation-delay: ${gi * 0.05}s">
+                    <div class="flex items-center gap-4 mb-6">
+                        <h3 class="font-bold text-[var(--gold)] text-lg Orbitron uppercase tracking-widest">${sec}</h3>
+                        <div class="flex-1 h-[1px] bg-[var(--border)] opacity-30"></div>
+                        <span class="mono text-[var(--text-faint)] text-[10px] uppercase font-bold">${g.stocks.length} ta korxona</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        ${g.stocks.map((s, i) => {
+                            const isUp = s.changePercent >= 0;
+                            return `
+                            <div class="card-stock rounded-sm">
+                                <div class="flex justify-between items-start mb-5">
+                                    <div>
+                                        <p class="mono text-[var(--gold)] text-[10px] tracking-tighter uppercase mb-1">${s.ticker}</p>
+                                        <h4 class="font-bold text-sm text-[var(--text-main)] truncate max-w-[160px] tracking-tight">${s.name}</h4>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="mono text-[10px] font-bold ${isUp ? 'text-[var(--gold)]' : 'text-[var(--red)]'} bg-${isUp ? '[var(--gold)]' : '[var(--red)]'}/10 px-2 py-0.5 border border-${isUp ? '[var(--gold)]' : '[var(--red)]'}/20">
+                                            ${isUp ? '↑' : '↓'} ${Math.abs(s.changePercent).toFixed(2)}%
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-end justify-between">
+                                    <div>
+                                        <p class="text-[var(--text-faint)] text-[9px] uppercase mono font-bold mb-1 opacity-60">Joriy Narx</p>
+                                        <p class="Orbitron font-bold text-xl text-[var(--text-main)]">${s.price.toLocaleString()} <span class="text-[10px] text-[var(--text-faint)] font-normal">UZS</span></p>
+                                    </div>
+                                    <a href="./sharx.html?company=${s.key}" class="mono text-[9px] font-bold border border-[var(--border)] px-4 py-2 hover:bg-[var(--gold)] hover:text-[var(--ink)] transition-all tracking-widest uppercase">Tahlil</a>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderSectors);
+
+        /* ─── THEME ─── */
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('light');
+            localStorage.setItem('theme', html.classList.contains('light') ? 'light' : 'dark');
+            updateLogos();
+        }
+
+        function updateLogos() {
+            const isLight = document.documentElement.classList.contains('light');
+            document.querySelectorAll('.light-logo').forEach(el => el.classList.toggle('hidden', !isLight));
+            document.querySelectorAll('.dark-logo').forEach(el => el.classList.toggle('hidden', isLight));
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.add('light');
+            updateLogos();
+        }
+
+        /* ─── LANG ─── */
+        function setLang(code) {
+            localStorage.setItem('lang', code);
+            document.querySelectorAll('.lang-btn').forEach(b => {
+                b.classList.toggle('active', b.textContent.toLowerCase() === code);
+            });
+        }
+
+        /* ─── SIDEBAR ─── */
+        function initSidebarHover() {
+            const wrapper = document.getElementById('sidebarWrapper');
+            const sidebar = document.getElementById('sidebar');
+            wrapper.addEventListener('mouseenter', () => {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.classList.add('sidebar-expanded');
+            });
+            wrapper.addEventListener('mouseleave', () => {
+                sidebar.classList.add('sidebar-collapsed');
+                sidebar.classList.remove('sidebar-expanded');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            initSidebarHover();
+            updateLogos();
+            const savedLang = localStorage.getItem('lang') || 'uz';
+            setLang(savedLang);
+        });
+    </script>
+</body>
+</html>

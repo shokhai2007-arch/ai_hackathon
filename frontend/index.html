@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Arbitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --ink: #0a0a1a;
+            --ink-mid: #12122a;
+            --ink-soft: #1a1a3e;
+            --paper: #e8e8ff;
+            --paper-dim: #d0d0f0;
+            --gold: #00f0ff;
+            --gold-light: #5cf0ff;
+            --gold-pale: #c0f0ff;
+            --teal: #b44dff;
+            --teal-dim: #7b2fcc;
+            --red: #ff3366;
+            --red-dim: #cc0033;
+            --text-main: #e0e0ff;
+            --text-dim: #8888bb;
+            --text-faint: #5555aa;
+            --border: rgba(0,240,255,0.15);
+            --border-strong: rgba(0,240,255,0.35);
+
+            --sidebar-bg: var(--ink-mid);
+            --sidebar-hover: var(--ink-soft);
+            --sidebar-active: var(--gold);
+            --sidebar-text: var(--text-dim);
+            --sidebar-text-active: var(--text-main);
+        }
+
+        .light {
+            --ink: #f0f2f8;
+            --ink-mid: #e2e5f0;
+            --ink-soft: #ffffff;
+            --paper: #12122a;
+            --paper-dim: #1a1a3e;
+            --gold: #0088cc;
+            --gold-light: #00a0e8;
+            --gold-pale: #b8ddf0;
+            --teal: #7b2fcc;
+            --teal-dim: #5a1f99;
+            --red: #cc0044;
+            --red-dim: #990033;
+            --text-main: #1a1a3e;
+            --text-dim: #5555aa;
+            --text-faint: #8888bb;
+            --border: rgba(0,136,204,0.2);
+            --border-strong: rgba(0,136,204,0.35);
+
+            --sidebar-bg: var(--ink-mid);
+            --sidebar-hover: var(--ink-soft);
+            --sidebar-active: var(--gold);
+            --sidebar-text: var(--text-dim);
+            --sidebar-text-active: var(--text-main);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--ink);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 0 24px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 10, 26, 0.82);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .light nav { background: rgba(240, 242, 248, 0.82); }
+
+        .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; min-width: 150px; }
+        .nav-logo-text { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--text-main); letter-spacing: -0.02em; }
+        .nav-logo-text span { color: var(--gold); }
+
+        .nav-links { display: flex; gap: 24px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 11px; font-family: 'Orbitron', sans-serif; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+        .nav-right { display: flex; align-items: center; gap: 24px; min-width: 150px; justify-content: flex-end; }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar-wrapper { flex-shrink: 0; position: relative; z-index: 20; }
+        .layout-sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); }
+        .nav-item { color: var(--sidebar-text); transition: all 0.2s ease; position: relative; cursor: pointer; border: none; background: transparent; text-align: left; }
+        .nav-item:hover { color: var(--sidebar-text-active); background: var(--sidebar-hover); }
+        .nav-item.active { color: var(--sidebar-text-active); }
+        .nav-item.active::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            width: 3px; height: 24px; background: var(--sidebar-active);
+            border-radius: 0 3px 3px 0; box-shadow: 0 0 8px var(--sidebar-active);
+        }
+        .sidebar-collapsed { width: 64px !important; }
+        .sidebar-expanded { width: 220px !important; }
+        .sidebar-text-label { transition: opacity 0.2s ease, visibility 0.2s ease; white-space: nowrap; }
+        .sidebar-collapsed .sidebar-text-label { opacity: 0; visibility: hidden; }
+
+        /* ─── PANELS ─── */
+        .panel-glass {
+            background: var(--ink-soft);
+            border: 1px solid var(--border);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .panel-glass::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0.3;
+        }
+
+        /* ─── UTILITIES ─── */
+        .scroll-thin::-webkit-scrollbar { width: 4px; }
+        .scroll-thin::-webkit-scrollbar-track { background: transparent; }
+        .scroll-thin::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .lang-btn {
+            background: none; border: 1px solid var(--border); color: var(--text-dim);
+            font-family: 'Space Mono', monospace; font-size: 0.6rem; padding: 4px 6px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .lang-btn.active, .lang-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+        .theme-toggle-btn {
+            background: none; border: 1px solid var(--border); color: var(--text-dim);
+            cursor: pointer; font-size: 1rem; padding: 8px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; width: 100%; border-radius: 8px;
+        }
+        .theme-toggle-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+        .theme-icon-sun { display: none; }
+        .light .theme-icon-sun { display: block; }
+        .light .theme-icon-moon { display: none; }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+
+    <!-- NAV -->
+    <nav>
+        <a href="/landing" class="nav-logo">
+            <img src="logo_fixed.jpg" alt="Arbitra" class="light-logo w-5 h-5 object-contain rounded-[3px] hidden">
+            <img src="logo_night.jpg" alt="Arbitra" class="dark-logo w-5 h-5 object-contain rounded-[3px]">
+            <span class="nav-logo-text">Arbitra<span> AI</span></span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="/landing">Asosiy</a></li>
+            <li><a href="./aksiyalar.html">Aksiyalar</a></li>
+            <li><a href="./AiAssistent.html">AI Assistent</a></li>
+            <li><a href="./profil.html">Profil</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <button onclick="openLogin()" class="mono text-[10px] bg-[var(--gold)] text-[var(--ink)] px-6 py-2 hover:bg-[var(--gold-light)] transition-all font-black uppercase tracking-widest">
+                Kirish
+            </button>
+        </div>
+    </nav>
+
+    <div class="flex flex-1 pt-[68px] overflow-hidden">
+        <!-- SIDEBAR -->
+        <div class="sidebar-wrapper" id="sidebarWrapper">
+            <aside id="sidebar" class="layout-sidebar h-full flex flex-col py-4 select-none sidebar-collapsed transition-all duration-300 overflow-hidden">
+                <nav class="flex flex-col w-full space-y-1 px-2">
+                    <a href="/landing" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                        <span class="sidebar-text-label">Asosiy</span>
+                    </a>
+                    <a href="./aksiyalar.html" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+                        <span class="sidebar-text-label">Aksiyalar</span>
+                    </a>
+                    <a href="./AiAssistent.html" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm">
+                        <div class="w-5 h-5 flex-shrink-0 rounded-full border-2 border-current flex items-center justify-center font-bold text-[9px] tracking-tighter">AI</div>
+                        <span class="sidebar-text-label">AI Assistent</span>
+                    </a>
+                </nav>
+
+                <div class="mt-auto px-2 space-y-2">
+                    <div class="flex justify-center gap-1 sidebar-text-label px-2">
+                        <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+                        <button class="lang-btn" onclick="setLang('ru')">RU</button>
+                        <button class="lang-btn" onclick="setLang('en')">EN</button>
+                    </div>
+                    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">
+                        <svg class="theme-icon-sun w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg class="theme-icon-moon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 flex flex-col items-center justify-center p-6 text-center relative z-10">
+            <div class="panel-glass max-w-2xl w-full">
+                <div class="w-16 h-16 bg-[var(--ink-soft)] border border-[var(--border)] rounded-full flex items-center justify-center text-[var(--gold)] mb-6 shadow-inner mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black Orbitron mb-2 tracking-tighter uppercase">Asosiy <span class="text-[var(--gold)]">Dashboard</span></h1>
+                <p class="text-[var(--text-dim)] text-sm mb-8 mono uppercase tracking-widest">Ma'lumotlar tahlili va bozor tahlili platformasi</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="./aksiyalar.html" class="panel-glass p-6 hover:border-[var(--gold)] transition-all text-left">
+                        <p class="text-[9px] mono text-[var(--gold)] mb-2 uppercase tracking-widest">01. Bozor</p>
+                        <p class="font-bold Orbitron text-xs">AKSIYALAR RO'YXATI</p>
+                    </a>
+                    <a href="./AiAssistent.html" class="panel-glass p-6 hover:border-[var(--gold)] transition-all text-left">
+                        <p class="text-[9px] mono text-[var(--gold)] mb-2 uppercase tracking-widest">02. Tahlil</p>
+                        <p class="font-bold Orbitron text-xs">AI YORDAMCHI</p>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+    function toggleTheme() {
+        const html = document.documentElement;
+        html.classList.toggle('light');
+        localStorage.setItem('theme', html.classList.contains('light') ? 'light' : 'dark');
+        updateLogos();
+    }
+
+    function updateLogos() {
+        const isLight = document.documentElement.classList.contains('light');
+        document.querySelectorAll('.light-logo').forEach(el => el.classList.toggle('hidden', !isLight));
+        document.querySelectorAll('.dark-logo').forEach(el => el.classList.toggle('hidden', isLight));
+    }
+
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light');
+        updateLogos();
+    }
+
+    function setLang(code) {
+        localStorage.setItem('lang', code);
+        document.querySelectorAll('.lang-btn').forEach(b => {
+            b.classList.toggle('active', b.textContent.toLowerCase() === code);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initSidebarHover();
+        updateLogos();
+        const savedLang = localStorage.getItem('lang') || 'uz';
+        setLang(savedLang);
+    });
+
+    function initSidebarHover() {
+        const wrapper = document.getElementById('sidebarWrapper');
+        const sidebar = document.getElementById('sidebar');
+        wrapper.addEventListener('mouseenter', () => {
+            sidebar.classList.remove('sidebar-collapsed');
+            sidebar.classList.add('sidebar-expanded');
+        });
+        wrapper.addEventListener('mouseleave', () => {
+            sidebar.classList.add('sidebar-collapsed');
+            sidebar.classList.remove('sidebar-expanded');
+        });
+    }
+
+    function openLogin() {
+        // Logic for login modal could go here, or just redirect
+        alert("Kirish sahifasi tez kunda...");
+    }
+</script>
+</body>
+</html>

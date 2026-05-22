@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Chart - Bozor Analitika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Bozor Analitika: Demo Dashboard</h1>
+            <a href="./aksiyalar.html" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm transition">Orqaga</a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">Agrobank (AGBN)</h2>
+                <canvas id="agroChart"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">SQB (SQBB)</h2>
+                <canvas id="sqbChart"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">Ipak Yo'li (IPAK)</h2>
+                <canvas id="ipakChart"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">Aloqa (ALOQ)</h2>
+                <canvas id="aloqaChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const months = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun'];
+        
+        function createChart(id, label, data, color) {
+            new Chart(document.getElementById(id), {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: color,
+                        backgroundColor: color + '20',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                }
+            });
+        }
+
+        createChart('agroChart', 'Agrobank', [5000, 5150, 5100, 5250, 5218, 5300], '#059669');
+        createChart('sqbChart', 'SQB', [8000, 8100, 8050, 8200, 8155, 8300], '#3b82f6');
+        createChart('ipakChart', 'Ipak Yo\'li', [6000, 6200, 6150, 6300, 6250, 6400], '#f59e0b');
+        createChart('aloqaChart', 'Aloqa', [3000, 3050, 3020, 3100, 3080, 3150], '#8b5cf6');
+    </script>
+</body>
+</html>

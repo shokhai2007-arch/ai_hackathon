@@ -1,0 +1,2495 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Arbitra AI — O'zbekiston Fond Bozori Moliyaviy Razvedkasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink: #0a0a1a;
+  --ink-mid: #12122a;
+  --ink-soft: #1a1a3e;
+  --paper: #e8e8ff;
+  --paper-dim: #d0d0f0;
+  --gold: #00f0ff;
+  --gold-light: #5cf0ff;
+  --gold-pale: #c0f0ff;
+  --teal: #b44dff;
+  --teal-dim: #7b2fcc;
+  --red: #ff3366;
+  --red-dim: #cc0033;
+  --text-main: #e0e0ff;
+  --text-dim: #8888bb;
+--text-faint: #5555aa;
+--border: rgba(0,240,255,0.15);
+--border-strong: rgba(0,240,255,0.35);
+}
+
+.light {
+  --ink: #f0f2f8;
+  --ink-mid: #e2e5f0;
+  --ink-soft: #ffffff;
+  --paper: #12122a;
+  --paper-dim: #1a1a3e;
+  --gold: #0088cc;
+  --gold-light: #00a0e8;
+  --gold-pale: #b8ddf0;
+  --teal: #7b2fcc;
+  --teal-dim: #5a1f99;
+  --red: #cc0044;
+  --red-dim: #990033;
+  --text-main: #1a1a3e;
+  --text-dim: #5555aa;
+  --text-faint: #8888bb;
+  --border: rgba(0,136,204,0.2);
+  --border-strong: rgba(0,136,204,0.35);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--text-main);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* ─── TYPOGRAPHY ─── */
+h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; line-height: 1.1; }
+.mono { font-family: 'Space Mono', monospace; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 clamp(24px, 5vw, 80px);
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 10, 26, 0.82);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  width: 34px; height: 34px;
+  background: var(--gold);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.nav-logo-mark::after {
+  content: 'A';
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--ink);
+  position: absolute;
+}
+
+.nav-logo-text {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.nav-logo-text span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--gold); }
+
+.nav-lang {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.lang-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+
+.lang-btn.active, .lang-btn:hover {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+}
+
+.dark-logo { display: block; }
+.light-logo { display: none; }
+.light .dark-logo { display: none; }
+.light .light-logo { display: block; }
+
+.theme-toggle-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-dim); cursor: pointer;
+  font-size: 1rem; padding: 4px 6px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.theme-toggle-btn svg { display: block; }
+.theme-icon-sun { display: none; }
+.theme-icon-moon { display: block; }
+.light .theme-icon-sun { display: block; }
+.light .theme-icon-moon { display: none; }
+.theme-toggle-btn:hover {
+  background: var(--gold); color: var(--ink); border-color: var(--gold);
+}
+
+.nav-cta {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 9px 20px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+
+.nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* ─── SECTIONS ─── */
+section { position: relative; z-index: 1; }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  padding: 0 clamp(24px, 5vw, 80px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+  padding-top: 68px;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -200px; right: -300px;
+  width: 800px; height: 800px;
+  background: radial-gradient(ellipse, rgba(0,240,255,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,240,255,0.08);
+  border: 1px solid var(--border-strong);
+  padding: 6px 14px 6px 10px;
+  margin-bottom: 28px;
+  font-size: 0.72rem;
+  color: var(--gold);
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--teal);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(180,77,255,0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 5px rgba(180,77,255,0); }
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  margin-bottom: 10px;
+  line-height: 1.0;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--gold);
+  display: block;
+}
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  max-width: 480px;
+  margin-bottom: 36px;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 13px 28px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.25s;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,240,255,0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.875rem;
+  padding: 12px 20px;
+  border: 1px solid var(--border-strong);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ghost:hover { color: var(--text-main); border-color: var(--gold); }
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+}
+
+.h-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.h-stat-val {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--gold);
+  letter-spacing: -0.03em;
+}
+
+.h-stat-label {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* ─── LIVE TICKER CARD ─── */
+.hero-visual {
+  position: relative;
+}
+
+.stock-card {
+  background: var(--ink-soft);
+  border: 1px solid var(--border-strong);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stock-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.ticker-id {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.ticker-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.ticker-exchange {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+.price-badge {
+  text-align: right;
+}
+
+.price-main {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.price-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  margin-top: 6px;
+}
+
+.price-change.up { background: rgba(180,77,255,0.1); color: var(--teal); border: 1px solid rgba(180,77,255,0.2); }
+.price-change.dn { background: rgba(255,51,102,0.1); color: var(--red); border: 1px solid rgba(255,51,102,0.2); }
+
+/* ─── MINI CHART ─── */
+.mini-chart {
+  height: 80px;
+  margin: 16px 0;
+  position: relative;
+}
+
+.mini-chart svg { width: 100%; height: 100%; }
+
+/* ─── METRICS GRID ─── */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-top: 20px;
+}
+
+.metric-cell {
+  background: var(--ink-soft);
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.metric-label {
+  font-size: 0.65rem;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-family: 'Space Mono', monospace;
+}
+
+.metric-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.metric-val.gold { color: var(--gold); }
+.metric-val.green { color: var(--teal); }
+.metric-val.red { color: var(--red); }
+
+/* ─── AI SIGNAL ─── */
+.ai-signal {
+  margin-top: 16px;
+  background: rgba(180,77,255,0.05);
+  border: 1px solid rgba(180,77,255,0.2);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.signal-icon {
+  width: 38px; height: 38px;
+  background: rgba(180,77,255,0.1);
+  border: 1px solid rgba(180,77,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.signal-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--teal);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.signal-text {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* ─── FLOATING CARDS ─── */
+.float-card {
+  position: absolute;
+  background: var(--ink-mid);
+  border: 1px solid var(--border-strong);
+  padding: 10px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  animation: float 4s ease-in-out infinite;
+}
+
+.float-card-1 { top: -20px; right: -30px; animation-delay: 0s; }
+.float-card-2 { bottom: 40px; left: -40px; animation-delay: 2s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.float-label { color: var(--text-faint); margin-bottom: 2px; }
+.float-val { color: var(--gold); font-weight: 500; }
+
+/* ─── TICKER TAPE ─── */
+.ticker-tape {
+  background: var(--ink-mid);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.ticker-inner {
+  display: flex;
+  gap: 0;
+  animation: ticker-scroll 30s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 32px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  border-right: 1px solid var(--border);
+}
+
+.t-sym { color: var(--gold); font-weight: 500; letter-spacing: 0.05em; }
+.t-price { color: var(--text-dim); }
+.t-chg.up { color: var(--teal); }
+.t-chg.dn { color: var(--red); }
+
+/* ─── PROBLEM SECTION ─── */
+.problem {
+  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.section-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 1px;
+  background: var(--gold);
+}
+
+.section-title {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  line-height: 1.05;
+}
+
+.section-title em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.section-body {
+  font-size: 1rem;
+  color: var(--text-dim);
+  line-height: 1.75;
+  font-weight: 300;
+  max-width: 480px;
+}
+
+.pain-points {
+  list-style: none;
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pain-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  background: rgba(255,51,102,0.04);
+  border: 1px solid rgba(255,51,102,0.12);
+  border-left: 3px solid var(--red);
+}
+
+.pain-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.pain-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  margin-bottom: 3px;
+}
+
+.pain-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ─── PROBLEM VISUAL ─── */
+.problem-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.doc-stack {
+  background: var(--ink-soft);
+  border: 1px solid var(--border);
+  padding: 20px;
+  position: relative;
+}
+
+.doc-stack::before {
+  content: '';
+  position: absolute;
+  top: 6px; left: 6px; right: -6px; bottom: -6px;
+  background: var(--ink-mid);
+  border: 1px solid var(--border);
+  z-index: -1;
+}
+
+.doc-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+
+.doc-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.doc-line {
+  height: 8px;
+  border-radius: 0;
+  background: var(--border);
+  opacity: 0.6;
+}
+
+.doc-line:nth-child(odd) { width: 100%; }
+.doc-line:nth-child(even) { width: 75%; }
+.doc-line:nth-child(3) { width: 88%; }
+
+.doc-highlight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px;
+  background: rgba(255,51,102,0.06);
+  border-left: 3px solid var(--red);
+}
+
+.dh-label { font-size: 0.72rem; color: var(--text-dim); }
+.dh-val { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--red); font-weight: 500; }
+
+/* ─── SOLUTION / FEATURES ─── */
+.solution {
+  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
+  background: var(--ink-mid);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.solution-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 64px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  margin-top: 48px;
+}
+
+.feature-card {
+  background: var(--ink-mid);
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.feature-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.feature-card:hover::after { transform: scaleX(1); }
+.feature-card:hover { background: var(--ink-soft); }
+
+.feature-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-faint);
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.feature-icon {
+  width: 48px; height: 48px;
+  background: rgba(0,240,255,0.08);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+
+.feature-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.feature-body {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.feature-tag {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  padding: 4px 10px;
+  background: rgba(0,240,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ─── LIVE DEMO SECTION ─── */
+.live-demo {
+  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
+}
+
+.demo-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 48px;
+  align-items: start;
+  margin-top: 48px;
+}
+
+/* ─── COMPANY PROFILE CARD ─── */
+.company-card {
+  background: var(--ink-soft);
+  border: 1px solid var(--border-strong);
+  overflow: hidden;
+}
+
+.company-header {
+  background: linear-gradient(135deg, rgba(0,240,255,0.08) 0%, transparent 60%);
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.company-logo {
+  width: 52px; height: 52px;
+  background: var(--gold);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  flex-shrink: 0;
+}
+
+.company-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-main);
+}
+
+.company-full {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.company-ticker-badge {
+  margin-left: auto;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  padding: 5px 12px;
+  background: rgba(0,240,255,0.1);
+  border: 1px solid var(--border-strong);
+  color: var(--gold);
+  letter-spacing: 0.06em;
+}
+
+.company-body { padding: 24px; }
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.83rem;
+}
+
+.data-row:last-child { border-bottom: none; }
+.data-key { color: var(--text-faint); font-size: 0.78rem; }
+.data-val { color: var(--text-main); font-family: 'Space Mono', monospace; font-weight: 500; }
+.data-val.gold { color: var(--gold); }
+.data-val.green { color: var(--teal); }
+.data-val.red { color: var(--red); }
+
+/* ─── ANALYSIS PANEL ─── */
+.analysis-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-block {
+  background: var(--ink-soft);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  position: relative;
+}
+
+.panel-block-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-block-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Gauge */
+.gauge-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gauge-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.gauge-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+}
+
+.gauge-name { color: var(--text-dim); }
+.gauge-score { font-family: 'Space Mono', monospace; color: var(--text-main); }
+
+.gauge-track {
+  height: 5px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.gauge-fill {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  transition: width 1s ease;
+}
+
+/* Ratios */
+.ratios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.ratio-cell {
+  text-align: center;
+  padding: 12px 8px;
+  background: rgba(0,240,255,0.03);
+  border: 1px solid var(--border);
+}
+
+.ratio-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.63rem;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+  margin-bottom: 5px;
+}
+
+.ratio-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.ratio-status {
+  font-size: 0.62rem;
+  margin-top: 3px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* AI Summary */
+.ai-summary-box {
+  background: rgba(180,77,255,0.04);
+  border: 1px solid rgba(180,77,255,0.15);
+  padding: 16px;
+}
+
+.ai-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ai-dot {
+  width: 8px; height: 8px;
+  background: var(--teal);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.ai-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.67rem;
+  color: var(--teal);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ai-text {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.verdict-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.verdict-chip {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  padding: 5px 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.verdict-chip.buy { color: var(--teal); border-color: rgba(180,77,255,0.35); background: rgba(180,77,255,0.08); }
+.verdict-chip.hold { color: var(--gold); border-color: var(--border-strong); background: rgba(0,240,255,0.06); }
+.verdict-chip.sell { color: var(--red); border-color: rgba(255,51,102,0.3); background: rgba(255,51,102,0.06); }
+.verdict-chip.active { font-weight: 500; }
+
+/* ─── HOW IT WORKS ─── */
+.how {
+  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
+  background: var(--ink-mid);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 64px;
+  position: relative;
+}
+
+.steps-container::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: calc(16.66% + 40px);
+  right: calc(16.66% + 40px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), var(--teal), var(--gold));
+  opacity: 0.3;
+}
+
+.step {
+  padding: 0 32px;
+  text-align: center;
+  position: relative;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+.step:first-child::before { display: none; }
+
+.step-num {
+  width: 80px; height: 80px;
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gold);
+  background: var(--ink-mid);
+  position: relative;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+}
+
+.step-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.step-body {
+  font-size: 0.83rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.step-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.step-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  padding: 3px 9px;
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  letter-spacing: 0.05em;
+}
+
+/* ─── PRICING ─── */
+.pricing {
+  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
+}
+
+.pricing-header {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 64px;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.plan-card {
+  background: var(--ink-mid);
+  padding: 32px 28px;
+  position: relative;
+}
+
+.plan-card.featured {
+  background: var(--ink-soft);
+  border-top: 2px solid var(--gold);
+}
+
+.plan-badge {
+  position: absolute;
+  top: -1px; right: 24px;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  padding: 4px 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plan-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-main);
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+.plan-desc {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  margin-bottom: 24px;
+}
+
+.plan-price {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: var(--text-main);
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+
+.plan-price span {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+.plan-per {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-bottom: 24px;
+  font-family: 'Space Mono', monospace;
+}
+
+.plan-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 20px;
+}
+
+.plan-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.plan-features li {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.plan-features li::before {
+  content: '—';
+  color: var(--gold);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.plan-features li.locked {
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+
+.plan-features li.locked::before { content: '×'; color: var(--text-faint); }
+
+.btn-plan {
+  width: 100%;
+  padding: 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-plan.outline {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-dim);
+}
+
+.btn-plan.outline:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-plan.solid {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.btn-plan.solid:hover {
+  background: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+/* ─── TESTIMONIALS / STATS ─── */
+.social-proof {
+  padding: clamp(60px, 8vh, 100px) clamp(24px, 5vw, 80px);
+  background: var(--ink-mid);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: var(--border);
+  margin-bottom: 48px;
+}
+
+.proof-stat {
+  background: var(--ink-mid);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.proof-num {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: var(--gold);
+  letter-spacing: -0.04em;
+  margin-bottom: 4px;
+}
+
+.proof-label {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+}
+
+/* ─── CTA ─── */
+.cta-section {
+  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(0,240,255,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.cta-section .section-title {
+  max-width: 700px;
+  margin: 0 auto 20px;
+}
+
+.cta-section .section-body {
+  max-width: 520px;
+  margin: 0 auto 40px;
+}
+
+.cta-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 48px clamp(24px, 5vw, 80px) 32px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 16px;
+  display: inline-flex;
+}
+
+.footer-desc {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  line-height: 1.65;
+  max-width: 280px;
+  margin-bottom: 20px;
+}
+
+.footer-disclaimer {
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  line-height: 1.5;
+  max-width: 280px;
+  padding: 10px 12px;
+  border-left: 2px solid var(--border);
+  opacity: 0.7;
+}
+
+.footer-col h5 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  font-size: 0.83rem;
+  color: var(--text-faint);
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--gold); }
+
+.footer-bottom {
+  padding: 20px clamp(24px, 5vw, 80px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  font-family: 'Space Mono', monospace;
+}
+
+/* ─── MULTILINGUAL TABS ─── */
+.lang-sections { position: relative; }
+
+/* ─── SCROLL ANIMATIONS ─── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── INTERACTIVE CHART ─── */
+.chart-container {
+  background: var(--ink-soft);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.chart-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chart-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  padding: 5px 12px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+
+.chart-btn.active, .chart-btn:hover {
+  background: rgba(0,240,255,0.08);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+canvas#mainChart {
+  width: 100%;
+  height: 200px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .hero, .problem { grid-template-columns: 1fr; }
+  .hero .hero-visual { order: -1; }
+  .features-grid, .steps-container, .plans-grid, .proof-grid { grid-template-columns: 1fr; }
+  .demo-layout { grid-template-columns: 1fr; }
+  .ratios-grid { grid-template-columns: repeat(3, 1fr); }
+  footer { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/landing" class="nav-logo" style="gap:8px;">
+    <img src="logo_fixed.jpg" alt="Arbitra" class="light-logo" style="width:20px;height:20px;object-fit:contain;border-radius:3px;">
+    <img src="logo_night.jpg" alt="Arbitra" class="dark-logo" style="width:20px;height:20px;object-fit:contain;border-radius:3px;">
+    <span class="nav-logo-text">Arbitra<span> AI</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/landing" class="active">Asosiy</a></li>
+    <li><a href="./aksiyalar.html">Aksiyalar</a></li>
+    <li><a href="./AiAssistent.html">AI Assistent</a></li>
+    <li><a href="./profil.html">Profil</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">
+      <svg class="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <div class="nav-lang">
+      <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+      <button class="lang-btn" onclick="setLang('ru')">RU</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="./aksiyalar.html" class="nav-cta">Boshlash</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-content fade-up">
+    <div class="hero-badge" id="hero-badge">O'zbekiston fond bozori · Real vaqt AI</div>
+    <h1 id="hero-h1">Fond Bozori<br/>Uchun <em>Moliyaviy Miya</em></h1>
+    <p class="hero-sub" id="hero-sub">
+      UZSE aksiyalarini AI orqali tahlil qiling. Murakkab moliyaviy hisobotlarni soniyalarda o'qib, aniq investitsiya signallarini oling.
+    </p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-primary" id="hero-btn1">Bepul sinab ko'ring</a>
+      <a href="#how" class="btn-ghost" id="hero-btn2">▶ Qanday ishlaydi</a>
+    </div>
+    <div class="hero-stats">
+      <div class="h-stat">
+        <span class="h-stat-val">127+</span>
+        <span class="h-stat-label" id="stat1">UZSE aksiyalari</span>
+      </div>
+      <div class="h-stat">
+        <span class="h-stat-val">0.3s</span>
+        <span class="h-stat-label" id="stat2">Tahlil vaqti</span>
+      </div>
+      <div class="h-stat">
+        <span class="h-stat-val">94%</span>
+        <span class="h-stat-label" id="stat3">Signal aniqligi</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual fade-up" style="transition-delay:0.2s;">
+    <div class="float-card float-card-1">
+      <div class="float-label">Тренд / Trend</div>
+      <div class="float-val">↑ BULLISH +12.4%</div>
+    </div>
+    <div class="stock-card">
+      <div class="card-header">
+        <div>
+          <div class="ticker-id">UZSE · AKFA</div>
+          <div class="ticker-name">AKFA GROUP</div>
+          <div class="ticker-exchange">Aksiyalar · O'zbekiston</div>
+        </div>
+        <div class="price-badge">
+          <div class="price-main">4,820 <span style="font-size:0.9rem;color:var(--text-faint)">UZS</span></div>
+          <div><span class="price-change up">▲ +5.47%</span></div>
+        </div>
+      </div>
+      <div class="mini-chart">
+        <svg viewBox="0 0 400 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00bfa5" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#00bfa5" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,68 L22,62 L44,65 L66,58 L88,52 L110,55 L132,48 L154,42 L176,46 L198,38 L220,32 L242,28 L264,24 L286,18 L308,22 L330,15 L352,10 L374,6 L400,4 L400,80 L0,80 Z" fill="url(#chartGrad)"/>
+          <path d="M0,68 L22,62 L44,65 L66,58 L88,52 L110,55 L132,48 L154,42 L176,46 L198,38 L220,32 L242,28 L264,24 L286,18 L308,22 L330,15 L352,10 L374,6 L400,4" fill="none" stroke="#00bfa5" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-cell">
+          <div class="metric-label">P/E</div>
+          <div class="metric-val gold">11.4×</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-label">ROE</div>
+          <div class="metric-val green">18.7%</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-label">Hajm</div>
+          <div class="metric-val">₾2.1M</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-label">Div.</div>
+          <div class="metric-val gold">8.2%</div>
+        </div>
+      </div>
+      <div class="ai-signal">
+        <div class="signal-icon">🧠</div>
+        <div>
+          <div class="signal-tag">AI Signal · Arbitra AI</div>
+          <div class="signal-text">Dividend kutilmasi yuqori. Balans mustahkam. <strong style="color:var(--teal)">SOTIB OLISH</strong> tavsiya etiladi.</div>
+        </div>
+      </div>
+    </div>
+    <div class="float-card float-card-2">
+      <div class="float-label">Sentiment</div>
+      <div class="float-val">🟢 84.2% BULLISH</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER TAPE -->
+<div class="ticker-tape">
+  <div class="ticker-inner" id="tickerInner">
+    <!-- Items duplicated for seamless loop -->
+    <div class="ticker-item"><span class="t-sym">UZSE:AKFA</span><span class="t-price">4,820 UZS</span><span class="t-chg up">▲ +5.47%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:SQB</span><span class="t-price">39,500 UZS</span><span class="t-chg up">▲ +2.14%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:UZMETKOMBINAT</span><span class="t-price">8,150 UZS</span><span class="t-chg dn">▼ -0.98%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:UZNIF</span><span class="t-price">1,240 UZS</span><span class="t-chg up">▲ +3.80%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:NBU</span><span class="t-price">22,700 UZS</span><span class="t-chg up">▲ +1.22%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:UZAUTO</span><span class="t-price">55,300 UZS</span><span class="t-chg dn">▼ -1.57%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:KVARZ</span><span class="t-price">890 UZS</span><span class="t-chg up">▲ +0.45%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:HAMKORBANK</span><span class="t-price">3,150 UZS</span><span class="t-chg up">▲ +1.89%</span></div>
+    <!-- Duplicate for loop -->
+    <div class="ticker-item"><span class="t-sym">UZSE:AKFA</span><span class="t-price">4,820 UZS</span><span class="t-chg up">▲ +5.47%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:SQB</span><span class="t-price">39,500 UZS</span><span class="t-chg up">▲ +2.14%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:UZMETKOMBINAT</span><span class="t-price">8,150 UZS</span><span class="t-chg dn">▼ -0.98%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:UZNIF</span><span class="t-price">1,240 UZS</span><span class="t-chg up">▲ +3.80%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:NBU</span><span class="t-price">22,700 UZS</span><span class="t-chg up">▲ +1.22%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:UZAUTO</span><span class="t-price">55,300 UZS</span><span class="t-chg dn">▼ -1.57%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:KVARZ</span><span class="t-price">890 UZS</span><span class="t-chg up">▲ +0.45%</span></div>
+    <div class="ticker-item"><span class="t-sym">UZSE:HAMKORBANK</span><span class="t-price">3,150 UZS</span><span class="t-chg up">▲ +1.89%</span></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="fade-up">
+    <div class="section-eyebrow" id="prob-eyebrow">Muammo / Проблема / The Problem</div>
+    <h2 class="section-title" id="prob-title">O'zbek Bozorida <em>Axborot Bo'shlig'i</em></h2>
+    <p class="section-body" id="prob-body">
+      Bugungi kunda O'zbekiston fond bozorida investorlar muhim qarorlarni to'liq ma'lumot asosida qabul qila olmaydilar. Birja ma'lumotlari tarqoq, moliyaviy hisobotlar o'qib bo'lmas darajada murakkab.
+    </p>
+    <ul class="pain-points">
+      <li>
+        <span class="pain-icon">📄</span>
+        <div>
+          <div class="pain-title" id="pain1-t">100+ varoqlik PDF hisobotlar</div>
+          <div class="pain-desc" id="pain1-d">Investor kompaniyaning moliyaviy holati haqida ma'lumot olish uchun yuzlab sahifali hujjatlarni o'qishi kerak. Arbitra AI bu ishni soniyalarda bajaradi.</div>
+        </div>
+      </li>
+      <li>
+        <span class="pain-icon">🔗</span>
+        <div>
+          <div class="pain-title" id="pain2-t">Ma'lumotlar bitta joyda emas</div>
+          <div class="pain-desc" id="pain2-d">UZSE, MHNAT, Telegram kanallar, soliq xabarlari — barchasi alohida. Arbitra AI ularni yagona tahliliy panelga birlashtiradi.</div>
+        </div>
+      </li>
+      <li>
+        <span class="pain-icon">🎲</span>
+        <div>
+          <div class="pain-title" id="pain3-t">Tushunarsiz risk hisob-kitobi</div>
+          <div class="pain-desc" id="pain3-d">Dividend prognozi, P/E, debt-to-equity — bu ko'rsatkichlarni oddiy investor o'zi hisoblashga qodir emas. Bizning AI avtomatik baholaydi.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="problem-visual fade-up" style="transition-delay:0.15s;">
+    <div class="doc-stack">
+      <div class="doc-title">UZMETKOMBINAT OAJ — Yillik Hisobot 2023 (PDF, 248 bet)</div>
+      <div class="doc-lines">
+        <div class="doc-line"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line"></div>
+        <div class="doc-line"></div>
+      </div>
+      <div class="doc-highlight">
+        <div>
+          <div class="dh-label" style="margin-bottom:2px;">Sahifa 187-dan topildi:</div>
+          <div class="dh-val">"Uzoq muddatli qarz: 1.4 trln UZS ↑ +34%"</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--ink-soft);border:1px solid var(--border);padding:20px;margin-top:2px;">
+      <div class="doc-title" style="color:var(--teal);">✦ Arbitra AI — 0.3 soniyada:</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;">
+        <div style="padding:10px;background:rgba(0,191,165,0.05);border:1px solid rgba(0,191,165,0.15);">
+          <div class="metric-label">Debt/Equity</div>
+          <div class="metric-val red">2.41×</div>
+        </div>
+        <div style="padding:10px;background:rgba(0,191,165,0.05);border:1px solid rgba(0,191,165,0.15);">
+          <div class="metric-label">Interest Cover</div>
+          <div class="metric-val" style="color:var(--gold);">1.8×</div>
+        </div>
+        <div style="padding:10px;background:rgba(0,191,165,0.05);border:1px solid rgba(0,191,165,0.15);">
+          <div class="metric-label">Net Margin</div>
+          <div class="metric-val green">6.2%</div>
+        </div>
+        <div style="padding:10px;background:rgba(0,191,165,0.05);border:1px solid rgba(0,191,165,0.15);">
+          <div class="metric-label">AI Risk Score</div>
+          <div class="metric-val red">YUQORI ⚠</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="solution" id="features">
+  <div class="solution-header fade-up">
+    <div class="section-eyebrow" id="feat-eyebrow">Yechim / Решение / Solution</div>
+    <h2 class="section-title" id="feat-title">Arbitra AI <em>Nima Qiladi?</em></h2>
+    <p class="section-body" style="margin:0 auto;text-align:center;" id="feat-sub">Bozor ma'lumotlarini yig'ishdan tortib, investitsiya signaligacha — barchasi yagona, aqlli ekotizimda.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card fade-up">
+      <div class="feature-num">01 / 06</div>
+      <div class="feature-icon">🔄</div>
+      <div class="feature-title" id="f1-t">Real Vaqt Ma'lumotlari</div>
+      <p class="feature-body" id="f1-b">UZSE, davlat portallari va moliyaviy Telegram kanallardan har 15 daqiqada avtomatik yangilanadigan ma'lumotlar oqimi. Hech bir muhim yangilikni o'tkazib yubormang.</p>
+      <span class="feature-tag">UZSE · API · SCRAPING</span>
+    </div>
+    <div class="feature-card fade-up" style="transition-delay:0.08s;">
+      <div class="feature-num">02 / 06</div>
+      <div class="feature-icon">🧠</div>
+      <div class="feature-title" id="f2-t">AI PDF Tahlili</div>
+      <p class="feature-body" id="f2-b">Yillik va choraklik hisobotlarni AI soniyalarda o'qib, eng muhim 12 ta moliyaviy koeffitsientni hisoblaydi: P/E, P/B, ROE, ROA, Debt/Equity va boshqalar.</p>
+      <span class="feature-tag">NLP · PDF PARSING · LLM</span>
+    </div>
+    <div class="feature-card fade-up" style="transition-delay:0.16s;">
+      <div class="feature-num">03 / 06</div>
+      <div class="feature-icon">📊</div>
+      <div class="feature-title" id="f3-t">Vizual Dashboard</div>
+      <p class="feature-body" id="f3-b">Interaktiv narx grafiklar, hajm tahlili, texnik indikatorlar (RSI, MACD, Bollinger). Ma'lumotlarni vizualizatsiya qilish — tushunish osonlashadi.</p>
+      <span class="feature-tag">CHART.JS · D3 · SVG</span>
+    </div>
+    <div class="feature-card fade-up" style="transition-delay:0.24s;">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-num">04 / 06</div>
+      <div class="feature-title" id="f4-t">AI Signal Generatsiyasi</div>
+      <p class="feature-body" id="f4-b">Texnik va fundamental tahlilni birlashtirgan AI "SOTIB OL", "USHLAB TUR", "SOTT" signallarini ishonchlilik darajasi bilan birga beradi.</p>
+      <span class="feature-tag">ML MODEL · ENSEMBLE · ACCURACY 94%</span>
+    </div>
+    <div class="feature-card fade-up" style="transition-delay:0.32s;">
+      <div class="feature-icon">💬</div>
+      <div class="feature-num">05 / 06</div>
+      <div class="feature-title" id="f5-t">Sentiment Tahlili</div>
+      <p class="feature-body" id="f5-b">O'zbek tilidagi yangiliklar va Telegram kanallardan bozor kayfiyatini real vaqtda o'lchaydi. Investorlar psixologiyasini ko'ring.</p>
+      <span class="feature-tag">NLP · UZBEK · TELEGRAM</span>
+    </div>
+    <div class="feature-card fade-up" style="transition-delay:0.40s;">
+      <div class="feature-icon">🔌</div>
+      <div class="feature-num">06 / 06</div>
+      <div class="feature-title" id="f6-t">B2B API Litsenziyasi</div>
+      <p class="feature-body" id="f6-b">Brokerlik uylari va banklar uchun RESTful API. Jett, Kap Depo kabi savdo platformalarga tayyor tahliliy ma'lumotlarni to'g'ridan integratsiya qiling.</p>
+      <span class="feature-tag">REST API · SDK · ENTERPRISE</span>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DEMO (SQB Bank) -->
+<section class="live-demo" id="demo">
+  <div class="section-eyebrow fade-up" id="demo-eyebrow">Jonli Namuna / Живой Пример / Live Demo</div>
+  <h2 class="section-title fade-up" id="demo-title">Savdo-Sanoat Qurilish Banki <em>(SQB)</em> Tahlili</h2>
+  <p class="section-body fade-up" id="demo-sub" style="margin-top:8px;">UZSE:SQB · O'zbekistonning eng yirik davlat tijorat banki. 2024 yillik hisobotiga asoslanib Arbitra AI tomonidan yaratilgan tahlil.</p>
+
+  <div class="demo-layout">
+    <div class="fade-up">
+      <div class="company-card">
+        <div class="company-header">
+          <div class="company-logo">SQB</div>
+          <div>
+            <div class="company-name">Savdo-Sanoat Qurilish Banki</div>
+            <div class="company-full">Savdo-Sanoat Qurilish Banki OAJ · Toshkent, O'zbekiston</div>
+          </div>
+          <div class="company-ticker-badge">SQB</div>
+        </div>
+        <div class="company-body">
+          <div class="data-row">
+            <span class="data-key" id="sqb-l1">Aksiya narxi</span>
+            <span class="data-val gold">39,500 UZS</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l2">Bozor kapitalizatsiyasi</span>
+            <span class="data-val">4.74 trln UZS</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l3">Jami aktivlar</span>
+            <span class="data-val">82.3 trln UZS</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l4">Sof foyda (2023)</span>
+            <span class="data-val green">1.82 trln UZS</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l5">Dividend daromadliligi</span>
+            <span class="data-val gold">6.8% / yil</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l6">52 hafta (min/max)</span>
+            <span class="data-val">31,200 / 42,800 UZS</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l7">Kapital yetarliligi (CAR)</span>
+            <span class="data-val green">14.2% ✓</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l8">NPL (Muammoli kreditlar)</span>
+            <span class="data-val" style="color:var(--gold)">2.8%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l9">Tarmoq</span>
+            <span class="data-val">Moliya · Bank · O'z</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key" id="sqb-l10">Aksiyadorlar soni</span>
+            <span class="data-val">120,000+</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-container">
+        <div class="panel-block-title">Narx Tarixi — SQB</div>
+        <div class="chart-controls">
+          <button class="chart-btn active" onclick="switchChart('1M',this)">1O</button>
+          <button class="chart-btn" onclick="switchChart('3M',this)">3O</button>
+          <button class="chart-btn" onclick="switchChart('6M',this)">6O</button>
+          <button class="chart-btn" onclick="switchChart('1Y',this)">1Y</button>
+        </div>
+        <canvas id="mainChart"></canvas>
+      </div>
+    </div>
+
+    <div class="analysis-panel fade-up" style="transition-delay:0.2s;">
+      <!-- AI Health Scores -->
+      <div class="panel-block">
+        <div class="panel-block-title" id="health-title">AI Moliyaviy Sog'lomlik Ballari</div>
+        <div class="gauge-row">
+          <div class="gauge-item">
+            <div class="gauge-top"><span class="gauge-name" id="g1">Likvidlik</span><span class="gauge-score">82/100</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:82%;background:var(--teal);"></div></div>
+          </div>
+          <div class="gauge-item">
+            <div class="gauge-top"><span class="gauge-name" id="g2">Rentabellik</span><span class="gauge-score">74/100</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:74%;background:var(--gold);"></div></div>
+          </div>
+          <div class="gauge-item">
+            <div class="gauge-top"><span class="gauge-name" id="g3">Kapital Yetarliligi</span><span class="gauge-score">88/100</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:88%;background:var(--teal);"></div></div>
+          </div>
+          <div class="gauge-item">
+            <div class="gauge-top"><span class="gauge-name" id="g4">O'sish Tendentsiyasi</span><span class="gauge-score">91/100</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:91%;background:var(--teal);"></div></div>
+          </div>
+          <div class="gauge-item">
+            <div class="gauge-top"><span class="gauge-name" id="g5">Risk Darajasi</span><span class="gauge-score">LOW — 28/100</span></div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:28%;background:var(--teal);"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Ratios -->
+      <div class="panel-block">
+        <div class="panel-block-title" id="ratios-title">Asosiy Moliyaviy Koeffitsientlar</div>
+        <div class="ratios-grid">
+          <div class="ratio-cell">
+            <div class="ratio-label">P/E</div>
+            <div class="ratio-value">8.6×</div>
+            <div class="ratio-status" style="color:var(--teal)">✓ Arzon</div>
+          </div>
+          <div class="ratio-cell">
+            <div class="ratio-label">P/B</div>
+            <div class="ratio-value">1.2×</div>
+            <div class="ratio-status" style="color:var(--teal)">✓ OK</div>
+          </div>
+          <div class="ratio-cell">
+            <div class="ratio-label">ROE</div>
+            <div class="ratio-value">21.4%</div>
+            <div class="ratio-status" style="color:var(--teal)">✓ Yuqori</div>
+          </div>
+          <div class="ratio-cell">
+            <div class="ratio-label">ROA</div>
+            <div class="ratio-value">2.6%</div>
+            <div class="ratio-status" style="color:var(--gold)">— Normal</div>
+          </div>
+          <div class="ratio-cell">
+            <div class="ratio-label">NIM</div>
+            <div class="ratio-value">5.1%</div>
+            <div class="ratio-status" style="color:var(--teal)">✓ Kuchli</div>
+          </div>
+          <div class="ratio-cell">
+            <div class="ratio-label">Div. Yield</div>
+            <div class="ratio-value">6.8%</div>
+            <div class="ratio-status" style="color:var(--teal)">✓ Yuqori</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Summary -->
+      <div class="panel-block">
+        <div class="panel-block-title" id="ai-analysis-title">Arbitra AI Xulosasi</div>
+        <div class="ai-summary-box">
+          <div class="ai-summary-header">
+            <div class="ai-dot"></div>
+            <div class="ai-label">Arbitra AI — Chuqur Tahlil</div>
+          </div>
+          <p class="ai-text" id="ai-summary-text">
+            SQB O'zbekistonning eng kuchli moliyaviy institutlaridan biri bo'lib, 2023 yilda sof foydasi 1.82 trln UZS ga yetdi (+18.4%). P/E=8.6× va P/B=1.2× ko'rsatkichlari aksiyaning hozirda <strong style="color:var(--teal)">past baholanganligini</strong> ko'rsatadi. Dividend daromadliligi 6.8% bozordagi eng yuqori ko'rsatkichlardan biri. Capital Adequacy Ratio 14.2% (minimum 10% talab) — kapital poydevori mustahkam. Asosiy risk: kredit portfelining 34% davlat loyihalariga yo'naltirilgani, bu siyosiy bog'liqlik tug'diradi.
+          </p>
+          <div class="verdict-row">
+            <span class="verdict-chip buy active">✓ SOTIB OL</span>
+            <span class="verdict-chip hold">— USHLA</span>
+            <span class="verdict-chip sell">✗ SOTT</span>
+            <span class="verdict-chip" style="color:var(--text-dim);border-color:var(--border);">ISHONCH: 87%</span>
+          </div>
+        </div>
+
+        <!-- Target Price -->
+        <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div style="padding:12px;background:rgba(224,82,82,0.05);border:1px solid rgba(224,82,82,0.15);text-align:center;">
+            <div class="ratio-label" id="target-bear">Pessimistik</div>
+            <div style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--red)">34,000</div>
+          </div>
+          <div style="padding:12px;background:rgba(200,169,110,0.06);border:1px solid var(--border-strong);text-align:center;">
+            <div class="ratio-label" id="target-base">Asosiy</div>
+            <div style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--gold)">44,500</div>
+          </div>
+          <div style="padding:12px;background:rgba(0,191,165,0.04);border:1px solid rgba(0,191,165,0.15);text-align:center;">
+            <div class="ratio-label" id="target-bull">Optimistik</div>
+            <div style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--teal)">52,000</div>
+          </div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--text-faint);margin-top:8px;font-family:'DM Mono',monospace;" id="target-label">12 oylik maqsad narx (UZS) · Hozirgi narx: 39,500</div>
+      </div>
+
+      <!-- Dividend History -->
+      <div class="panel-block">
+        <div class="panel-block-title" id="div-title">SQB Dividend Tarixi</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="data-row">
+            <span class="data-key">2020</span><span class="data-val">800 UZS/aksiya</span><span style="font-size:0.72rem;color:var(--text-faint);font-family:'DM Mono',monospace;">yield: 3.2%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key">2021</span><span class="data-val">1,200 UZS/aksiya</span><span style="font-size:0.72rem;color:var(--text-faint);font-family:'DM Mono',monospace;">yield: 4.1%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key">2022</span><span class="data-val">1,850 UZS/aksiya</span><span style="font-size:0.72rem;color:var(--text-faint);font-family:'DM Mono',monospace;">yield: 5.4%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-key">2023</span><span class="data-val gold">2,690 UZS/aksiya</span><span style="font-size:0.72rem;color:var(--teal);font-family:'DM Mono',monospace;">yield: 6.8% ▲</span>
+          </div>
+          <div class="data-row" style="border-color:rgba(0,191,165,0.2)">
+            <span class="data-key" style="color:var(--teal)">2024E (prognoz)</span><span class="data-val green">3,100–3,400 UZS</span><span style="font-size:0.72rem;color:var(--teal);font-family:'DM Mono',monospace;">yield: ~8.1%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="solution-header fade-up">
+    <div class="section-eyebrow" id="how-eyebrow">Jarayon / Процесс / Process</div>
+    <h2 class="section-title" id="how-title">Qanday <em>Ishlaydi?</em></h2>
+  </div>
+  <div class="steps-container">
+    <div class="step fade-up">
+      <div class="step-num">01</div>
+      <div class="step-title" id="s1-t">Ma'lumot Yig'ish</div>
+      <p class="step-body" id="s1-b">UZSE API, davlat ochiq portallari, Telegram moliyaviy kanallar va kompaniyalar veb-saytlaridan avtomatik skraping. Har 15 daqiqada yangilanadi.</p>
+      <div class="step-tags">
+        <span class="step-tag">UZSE.UZ</span>
+        <span class="step-tag">OPENDATA.GOV.UZ</span>
+        <span class="step-tag">TELEGRAM API</span>
+        <span class="step-tag">PDF SCRAPER</span>
+      </div>
+    </div>
+    <div class="step fade-up" style="transition-delay:0.15s;">
+      <div class="step-num">02</div>
+      <div class="step-title" id="s2-t">AI Tahlil</div>
+      <p class="step-body" id="s2-b">LLM (Large Language Model) moliyaviy hujjatlarni o'qiydi. Neyron tarmoqlar 50+ parametr asosida kompaniya salomatligini baholaydi va signal shakllantiriladi.</p>
+      <div class="step-tags">
+        <span class="step-tag">LLM ANALYSIS</span>
+        <span class="step-tag">FUNDAMENTALS</span>
+        <span class="step-tag">TECHNICALS</span>
+        <span class="step-tag">SENTIMENT NLP</span>
+      </div>
+    </div>
+    <div class="step fade-up" style="transition-delay:0.30s;">
+      <div class="step-num">03</div>
+      <div class="step-title" id="s3-t">Tayyor Signal</div>
+      <p class="step-body" id="s3-b">Investorga tushunarli tilda vizual xulosalar, narx maqsadlari va ishonchlilik darajasi taqdim etiladi. Savdo ilovalariga real vaqtda uzatiladi.</p>
+      <div class="step-tags">
+        <span class="step-tag">BUY/HOLD/SELL</span>
+        <span class="step-tag">PRICE TARGET</span>
+        <span class="step-tag">CONFIDENCE %</span>
+        <span class="step-tag">API PUSH</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-proof fade-up">
+  <div class="proof-grid">
+    <div class="proof-stat">
+      <div class="proof-num">127</div>
+      <div class="proof-label" id="proof1">UZSE Aksiyalari Qamrovi</div>
+    </div>
+    <div class="proof-stat">
+      <div class="proof-num">0.3s</div>
+      <div class="proof-label" id="proof2">O'rtacha Tahlil Vaqti</div>
+    </div>
+    <div class="proof-stat">
+      <div class="proof-num">94%</div>
+      <div class="proof-label" id="proof3">Signal Aniqligi (Backtested)</div>
+    </div>
+    <div class="proof-stat">
+      <div class="proof-num">18+</div>
+      <div class="proof-label" id="proof4">B2B Pilot Sheriklari</div>
+    </div>
+  </div>
+  <!-- Logos row -->
+  <div style="display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:center;padding:32px 0;">
+    <div style="padding:12px 24px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-faint);letter-spacing:0.05em;">UZSE</div>
+    <div style="padding:12px 24px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-faint);letter-spacing:0.05em;">SQB BANK</div>
+    <div style="padding:12px 24px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-faint);letter-spacing:0.05em;">HAMKORBANK</div>
+    <div style="padding:12px 24px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-faint);letter-spacing:0.05em;">UzNIF</div>
+    <div style="padding:12px 24px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-faint);letter-spacing:0.05em;">MHNAT</div>
+    <div style="padding:12px 24px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-faint);letter-spacing:0.05em;">KAPITAL BOZOR</div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-header fade-up">
+    <div class="section-eyebrow" id="price-eyebrow">Narxlar / Тарифы / Pricing</div>
+    <h2 class="section-title" id="price-title">Sizga Mos <em>Tarif</em></h2>
+    <p class="section-body" style="margin:0 auto;text-align:center;" id="price-sub">Oddiy investordan tortib yirik brokerlik uylarigacha — har biri uchun yechim mavjud.</p>
+  </div>
+  <div class="plans-grid fade-up">
+    <div class="plan-card">
+      <div class="plan-name" id="p1-name">Standard</div>
+      <div class="plan-desc" id="p1-desc">Boshlang'ich investorlar uchun</div>
+      <div class="plan-price">Tekin<span></span></div>
+      <div class="plan-per" id="p1-per">Forever free</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li id="pf1-1">127 aksiya narxlari (kechikish bilan)</li>
+        <li id="pf1-2">Asosiy grafiklar</li>
+        <li id="pf1-3">Kunlik 5 ta bepul AI signal</li>
+        <li class="locked" id="pf1-4">Chuqur fundamental tahlil</li>
+        <li class="locked" id="pf1-5">PDF hisobot tahlili</li>
+        <li class="locked" id="pf1-6">Sentiment monitoring</li>
+      </ul>
+      <button class="btn-plan outline" id="p1-btn">Bepul Boshlash</button>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-badge">MASHHUR</div>
+      <div class="plan-name" id="p2-name">Premium AI</div>
+      <div class="plan-desc" id="p2-desc">Jiddiy investorlar uchun</div>
+      <div class="plan-price">149,000 <span>UZS</span></div>
+      <div class="plan-per" id="p2-per">/ oyiga · yillik to'lovda</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li id="pf2-1">Real vaqt ma'lumotlar (15-daqiqa)</li>
+        <li id="pf2-2">Cheksiz AI signallar + ishonch darajasi</li>
+        <li id="pf2-3">Chuqur fundamental tahlil (P/E, ROE, DCF)</li>
+        <li id="pf2-4">PDF hisobot tahlili — soniyada</li>
+        <li id="pf2-5">Sentiment va yangiliklar tahlili</li>
+        <li id="pf2-6">Portfolio risk hisob-kitobi</li>
+      </ul>
+      <button class="btn-plan solid" id="p2-btn">Premium Olish</button>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name" id="p3-name">Enterprise API</div>
+      <div class="plan-desc" id="p3-desc">Banklar va brokerlik uylari</div>
+      <div class="plan-price">Maxsus<span></span></div>
+      <div class="plan-per" id="p3-per">Yillik litsenziya</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li id="pf3-1">To'liq RESTful API kirish huquqi</li>
+        <li id="pf3-2">White-label integrasiya</li>
+        <li id="pf3-3">SLA kafolati (99.9% uptime)</li>
+        <li id="pf3-4">Maxsus AI model o'qitish</li>
+        <li id="pf3-5">Dedicated support manager</li>
+        <li id="pf3-6">Jett / Kap Depo integratsiyasi</li>
+      </ul>
+      <button class="btn-plan outline" id="p3-btn">Muzokaralar Olib Borish</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section fade-up">
+  <div class="section-eyebrow" style="justify-content:center;" id="cta-eyebrow">Bugun Boshlang · Начните Сегодня · Start Today</div>
+  <h2 class="section-title" id="cta-title">O'zbekiston Fond Bozorida<br/><em>Aqlli Investor</em> Bo'ling</h2>
+  <p class="section-body" id="cta-body">
+    Arbitra AI — bu shunchaki vosita emas. Bu O'zbekiston kapital bozorida ma'lumotga asoslangan qarorlar qabul qiluvchi investorlar hamjamiyati.
+  </p>
+  <div class="cta-buttons">
+    <a href="./aksiyalar.html" class="btn-primary" id="cta-btn1">Bepul Boshlash →</a>
+    <a href="mailto:info@arbitra.ai" class="btn-ghost" id="cta-btn2">B2B Muzokaralar</a>
+  </div>
+  <p style="margin-top:20px;font-size:0.75rem;color:var(--text-faint);font-family:'DM Mono',monospace;" id="cta-note">Karta talab etilmaydi · O'zbekiston uchun yaratilgan · UZSE rasmiy ma'lumotlari</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="/landing" class="nav-logo" style="gap:8px;">
+    <img src="logo_fixed.jpg" alt="Arbitra" class="light-logo" style="width:20px;height:20px;object-fit:contain;border-radius:3px;">
+    <img src="logo_night.jpg" alt="Arbitra" class="dark-logo" style="width:20px;height:20px;object-fit:contain;border-radius:3px;">
+      <span class="nav-logo-text">Arbitra<span> AI</span></span>
+    </a>
+    <p class="footer-desc" id="footer-desc">O'zbekiston fond bozori uchun AI-powered moliyaviy razvedka platformasi. UZSE ma'lumotlari asosida real vaqtda tahlil.</p>
+    <p class="footer-disclaimer" id="footer-disc">Ushbu platforma investitsiya maslahatlarini berish uchun emas. Barcha signal va tahlillar ma'lumot maqsadida. Investitsiya qarorlarini qabul qilishdan avval moliyaviy maslahatchi bilan maslahatlashing.</p>
+  </div>
+  <div class="footer-col">
+    <h5>Mahsulot</h5>
+    <ul class="footer-links">
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">AI Signals</a></li>
+      <li><a href="#">PDF Tahlil</a></li>
+      <li><a href="#">Sentiment</a></li>
+      <li><a href="#">API Hujjatlar</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h5>Kompaniya</h5>
+    <ul class="footer-links">
+      <li><a href="#">Biz haqimizda</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Hamkorlar</a></li>
+      <li><a href="#">Karyera</a></li>
+      <li><a href="#">Aloqa</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h5>Huquqiy</h5>
+    <ul class="footer-links">
+      <li><a href="#">Maxfiylik siyosati</a></li>
+      <li><a href="#">Foydalanish shartlari</a></li>
+      <li><a href="#">Ma'lumot manbai</a></li>
+      <li><a href="#">Javobgarlik</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© 2024 Arbitra AI · Toshkent, O'zbekiston</span>
+  <span>info@arbitra.ai · Fintech Hackathon 2024</span>
+</div>
+
+<script>
+// ─── LANGUAGE CONTENT ───────────────────────────────────────────────────────
+const content = {
+  uz: {
+    heroBadge: "O'zbekiston fond bozori · Real vaqt AI",
+    heroH1: 'Fond Bozori<br/>Uchun <em>Moliyaviy Miya</em>',
+    heroSub: "UZSE aksiyalarini AI orqali tahlil qiling. Murakkab moliyaviy hisobotlarni soniyalarda o'qib, aniq investitsiya signallarini oling.",
+    heroBtn1: "Bepul sinab ko'ring", heroBtn2: "▶ Qanday ishlaydi",
+    stat1:"UZSE aksiyalari", stat2:"Tahlil vaqti", stat3:"Signal aniqligi",
+    probEyebrow:"Muammo / Проблема / The Problem",
+    probTitle:"O'zbek Bozorida <em>Axborot Bo'shlig'i</em>",
+    probBody:"Bugungi kunda O'zbekiston fond bozorida investorlar muhim qarorlarni to'liq ma'lumot asosida qabul qila olmaydilar. Birja ma'lumotlari tarqoq, moliyaviy hisobotlar o'qib bo'lmas darajada murakkab.",
+    pain1T:"100+ varoqlik PDF hisobotlar", pain1D:"Investor kompaniyaning moliyaviy holati haqida ma'lumot olish uchun yuzlab sahifali hujjatlarni o'qishi kerak. Arbitra AI bu ishni soniyalarda bajaradi.",
+    pain2T:"Ma'lumotlar bitta joyda emas", pain2D:"UZSE, MHNAT, Telegram kanallar, soliq xabarlari — barchasi alohida. Arbitra AI ularni yagona tahliliy panelga birlashtiradi.",
+    pain3T:"Tushunarsiz risk hisob-kitobi", pain3D:"Dividend prognozi, P/E, debt-to-equity — bu ko'rsatkichlarni oddiy investor o'zi hisoblashga qodir emas. Bizning AI avtomatik baholaydi.",
+    featEyebrow:"Yechim / Решение / Solution", featTitle:'Arbitra AI <em>Nima Qiladi?</em>',
+    featSub:"Bozor ma'lumotlarini yig'ishdan tortib, investitsiya signaligacha — barchasi yagona, aqlli ekotizimda.",
+    f1T:"Real Vaqt Ma'lumotlari", f1B:"UZSE, davlat portallari va moliyaviy Telegram kanallardan har 15 daqiqada avtomatik yangilanadigan ma'lumotlar oqimi.",
+    f2T:"AI PDF Tahlili", f2B:"Yillik va choraklik hisobotlarni AI soniyalarda o'qib, 12 ta moliyaviy koeffitsientni hisoblaydi.",
+    f3T:"Vizual Dashboard", f3B:"Interaktiv narx grafiklar, hajm tahlili, texnik indikatorlar (RSI, MACD, Bollinger).",
+    f4T:"AI Signal Generatsiyasi", f4B:"Texnik va fundamental tahlilni birlashtirgan AI aniq signallar beradi.",
+    f5T:"Sentiment Tahlili", f5B:"O'zbek tilidagi yangiliklar va Telegram kanallardan bozor kayfiyatini real vaqtda o'lchaydi.",
+    f6T:"B2B API Litsenziyasi", f6B:"Brokerlik uylari va banklar uchun RESTful API. Jett, Kap Depo kabi platformalarga integratsiya.",
+    demoEyebrow:"Jonli Namuna / Живой Пример / Live Demo", demoTitle:'Savdo-Sanoat Qurilish Banki <em>(SQB)</em> Tahlili',
+    demoSub:"UZSE:SQB · O'zbekistonning eng yirik davlat tijorat banki.",
+    sqbL1:"Aksiya narxi", sqbL2:"Bozor kapitalizatsiyasi", sqbL3:"Jami aktivlar",
+    sqbL4:"Sof foyda (2023)", sqbL5:"Dividend daromadliligi", sqbL6:"52 hafta (min/max)",
+    sqbL7:"Kapital yetarliligi (CAR)", sqbL8:"NPL (Muammoli kreditlar)", sqbL9:"Tarmoq", sqbL10:"Aksiyadorlar soni",
+    healthTitle:"AI Moliyaviy Sog'lomlik Ballari",
+    g1:"Likvidlik", g2:"Rentabellik", g3:"Kapital Yetarliligi", g4:"O'sish Tendentsiyasi", g5:"Risk Darajasi",
+    ratiosTitle:"Asosiy Moliyaviy Koeffitsientlar",
+    aiAnalysisTitle:"Arbitra AI Xulosasi",
+    aiSummaryText:"SQB O'zbekistonning eng kuchli moliyaviy institutlaridan biri bo'lib, 2023 yilda sof foydasi 1.82 trln UZS ga yetdi (+18.4%). P/E=8.6× va P/B=1.2× ko'rsatkichlari aksiyaning hozirda <strong style='color:var(--teal)'>past baholanganligini</strong> ko'rsatadi. Dividend daromadliligi 6.8% bozordagi eng yuqori ko'rsatkichlardan biri. Capital Adequacy Ratio 14.2% — kapital poydevori mustahkam. Asosiy risk: kredit portfelining 34% davlat loyihalariga yo'naltirilgani.",
+    divTitle:"SQB Dividend Tarixi", targetBear:"Pessimistik", targetBase:"Asosiy", targetBull:"Optimistik",
+    targetLabel:"12 oylik maqsad narx (UZS) · Hozirgi narx: 39,500",
+    howEyebrow:"Jarayon / Процесс / Process", howTitle:'Qanday <em>Ishlaydi?</em>',
+    s1T:"Ma'lumot Yig'ish", s1B:"UZSE API, davlat ochiq portallari, Telegram moliyaviy kanallar va kompaniyalar veb-saytlaridan avtomatik skraping.",
+    s2T:"AI Tahlil", s2B:"LLM moliyaviy hujjatlarni o'qiydi. Neyron tarmoqlar 50+ parametr asosida kompaniya salomatligini baholaydi.",
+    s3T:"Tayyor Signal", s3B:"Investorga tushunarli tilda vizual xulosalar, narx maqsadlari va ishonchlilik darajasi taqdim etiladi.",
+    proof1:"UZSE Aksiyalari Qamrovi", proof2:"O'rtacha Tahlil Vaqti", proof3:"Signal Aniqligi (Backtested)", proof4:"B2B Pilot Sheriklari",
+    priceEyebrow:"Narxlar / Тарифы / Pricing", priceTitle:'Sizga Mos <em>Tarif</em>',
+    priceSub:"Oddiy investordan tortib yirik brokerlik uylarigacha — har biri uchun yechim mavjud.",
+    p1Name:"Standard", p1Desc:"Boshlang'ich investorlar uchun", p1Per:"Forever free",
+    pf11:"127 aksiya narxlari (kechikish bilan)", pf12:"Asosiy grafiklar", pf13:"Kunlik 5 ta bepul AI signal", pf14:"Chuqur fundamental tahlil", pf15:"PDF hisobot tahlili", pf16:"Sentiment monitoring",
+    p1Btn:"Bepul Boshlash",
+    p2Name:"Premium AI", p2Desc:"Jiddiy investorlar uchun", p2Per:"/ oyiga · yillik to'lovda",
+    pf21:"Real vaqt ma'lumotlar (15-daqiqa)", pf22:"Cheksiz AI signallar + ishonch darajasi", pf23:"Chuqur fundamental tahlil (P/E, ROE, DCF)", pf24:"PDF hisobot tahlili — soniyada", pf25:"Sentiment va yangiliklar tahlili", pf26:"Portfolio risk hisob-kitobi",
+    p2Btn:"Premium Olish",
+    p3Name:"Enterprise API", p3Desc:"Banklar va brokerlik uylari", p3Per:"Yillik litsenziya",
+    pf31:"To'liq RESTful API kirish huquqi", pf32:"White-label integrasiya", pf33:"SLA kafolati (99.9% uptime)", pf34:"Maxsus AI model o'qitish", pf35:"Dedicated support manager", pf36:"Jett / Kap Depo integratsiyasi",
+    p3Btn:"Muzokaralar Olib Borish",
+    ctaEyebrow:"Bugun Boshlang · Начните Сегодня · Start Today",
+    ctaTitle:"O'zbekiston Fond Bozorida<br/><em>Aqlli Investor</em> Bo'ling",
+    ctaBody:"Arbitra AI — bu shunchaki vosita emas. Bu O'zbekiston kapital bozorida ma'lumotga asoslangan qarorlar qabul qiluvchi investorlar hamjamiyati.",
+    ctaBtn1:"Bepul Boshlash →", ctaBtn2:"B2B Muzokaralar",
+    ctaNote:"Karta talab etilmaydi · O'zbekiston uchun yaratilgan · UZSE rasmiy ma'lumotlari",
+    footerDesc:"O'zbekiston fond bozori uchun AI-powered moliyaviy razvedka platformasi.",
+    footerDisc:"Ushbu platforma investitsiya maslahatlarini berish uchun emas. Barcha signal va tahlillar ma'lumot maqsadida.",
+  },
+  ru: {
+    heroBadge: "Фондовый рынок Узбекистана · AI в реальном времени",
+    heroH1: 'Финансовый Мозг<br/>Для <em>Фондового Рынка</em>',
+    heroSub: "Анализируйте акции УЗБИРЖЕ с помощью ИИ. Читайте сложные финансовые отчёты за секунды — получайте точные инвестиционные сигналы.",
+    heroBtn1: "Попробовать бесплатно", heroBtn2: "▶ Как это работает",
+    stat1:"Акций УЗБИРЖЕ", stat2:"Время анализа", stat3:"Точность сигналов",
+    probEyebrow:"Проблема / Muammo / The Problem",
+    probTitle:"<em>Информационный Разрыв</em> на Рынке Узбекистана",
+    probBody:"Сегодня инвесторы на фондовом рынке Узбекистана не могут принимать важные решения на основе полных данных. Биржевые данные разрозненны, финансовые отчёты невозможно читать без специальных знаний.",
+    pain1T:"PDF-отчёты на 100+ страниц", pain1D:"Инвестору нужно прочитать сотни страниц документов, чтобы понять финансовое состояние компании. Arbitra AI делает это за секунды.",
+    pain2T:"Данные не в одном месте", pain2D:"УЗБИРЖЕ, MHNAT, Telegram-каналы, налоговые новости — всё по отдельности. Arbitra AI объединяет их в единую аналитическую панель.",
+    pain3T:"Непонятный расчёт рисков", pain3D:"Прогноз дивидендов, P/E, debt-to-equity — обычный инвестор не может рассчитать эти показатели самостоятельно. Наш ИИ оценивает автоматически.",
+    featEyebrow:"Решение / Yechim / Solution", featTitle:'Что Делает <em>Arbitra AI?</em>',
+    featSub:"От сбора рыночных данных до инвестиционного сигнала — всё в единой умной экосистеме.",
+    f1T:"Данные в реальном времени", f1B:"Автоматически обновляемый поток данных из УЗБИРЖЕ, государственных порталов и финансовых Telegram-каналов каждые 15 минут.",
+    f2T:"ИИ-анализ PDF", f2B:"ИИ читает годовые и квартальные отчёты за секунды и рассчитывает 12 ключевых финансовых коэффициентов.",
+    f3T:"Визуальный дашборд", f3B:"Интерактивные графики цен, анализ объёмов, технические индикаторы (RSI, MACD, Bollinger).",
+    f4T:"Генерация сигналов ИИ", f4B:"ИИ, объединяющий технический и фундаментальный анализ, выдаёт чёткие сигналы с уровнем уверенности.",
+    f5T:"Анализ настроений", f5B:"Измерение рыночных настроений в реальном времени из узбекских новостей и Telegram-каналов.",
+    f6T:"API-лицензия B2B", f6B:"RESTful API для брокерских домов и банков. Интеграция с торговыми платформами Jett, Kap Depo и другими.",
+    demoEyebrow:"Живой Пример / Jonli Namuna / Live Demo", demoTitle:'Анализ Сбербанка Узбекистана <em>(SQB)</em>',
+    demoSub:"УЗБИРЖЕ:SQB · Крупнейший государственный коммерческий банк Узбекистана.",
+    sqbL1:"Цена акции", sqbL2:"Рыночная капитализация", sqbL3:"Всего активов",
+    sqbL4:"Чистая прибыль (2023)", sqbL5:"Дивидендная доходность", sqbL6:"52 недели (мин/макс)",
+    sqbL7:"Достаточность капитала (CAR)", sqbL8:"NPL (Проблемные кредиты)", sqbL9:"Сектор", sqbL10:"Кол-во акционеров",
+    healthTitle:"Оценка Финансового Здоровья ИИ",
+    g1:"Ликвидность", g2:"Рентабельность", g3:"Достаточность капитала", g4:"Тенденция роста", g5:"Уровень риска",
+    ratiosTitle:"Ключевые Финансовые Коэффициенты",
+    aiAnalysisTitle:"Вывод Arbitra AI",
+    aiSummaryText:"SQB является одним из сильнейших финансовых институтов Узбекистана: в 2023 году чистая прибыль достигла 1,82 трлн сум (+18,4%). Показатели P/E=8,6× и P/B=1,2× свидетельствуют о том, что акция в настоящее время <strong style='color:var(--teal)'>недооценена</strong>. Дивидендная доходность 6,8% — одна из самых высоких на рынке. CAR 14,2% — капитальная база прочная. Основной риск: 34% кредитного портфеля направлено на государственные проекты.",
+    divTitle:"История Дивидендов SQB", targetBear:"Пессимист.", targetBase:"Базовый", targetBull:"Оптимист.",
+    targetLabel:"Целевая цена на 12 мес. (сум) · Текущая цена: 39 500",
+    howEyebrow:"Процесс / Jarayon / Process", howTitle:'Как Это <em>Работает?</em>',
+    s1T:"Сбор данных", s1B:"Автоматический парсинг из УЗБИРЖЕ API, государственных порталов, финансовых Telegram-каналов и корпоративных сайтов.",
+    s2T:"Анализ ИИ", s2B:"LLM читает финансовые документы. Нейросети оценивают здоровье компании по 50+ параметрам.",
+    s3T:"Готовый сигнал", s3B:"Инвестору предоставляются наглядные выводы, ценовые цели и уровень уверенности на понятном языке.",
+    proof1:"Охват акций УЗБИРЖЕ", proof2:"Среднее время анализа", proof3:"Точность сигналов (бэктест)", proof4:"B2B пилотные партнёры",
+    priceEyebrow:"Тарифы / Narxlar / Pricing", priceTitle:'Подходящий <em>Тариф</em> для Вас',
+    priceSub:"От начинающего инвестора до крупного брокерского дома — решение есть для каждого.",
+    p1Name:"Стандарт", p1Desc:"Для начинающих инвесторов", p1Per:"Бесплатно навсегда",
+    pf11:"127 котировок акций (с задержкой)", pf12:"Базовые графики", pf13:"5 бесплатных сигналов в день", pf14:"Углублённый фундаментальный анализ", pf15:"Анализ PDF-отчётов", pf16:"Мониторинг настроений",
+    p1Btn:"Начать бесплатно",
+    p2Name:"Premium AI", p2Desc:"Для серьёзных инвесторов", p2Per:"/ мес. при годовой оплате",
+    pf21:"Данные в реальном времени (15 мин)", pf22:"Безлимитные сигналы ИИ + уровень уверенности", pf23:"Углублённый фундаментальный анализ (P/E, ROE, DCF)", pf24:"Анализ PDF-отчётов за секунды", pf25:"Анализ настроений и новостей", pf26:"Расчёт риска портфеля",
+    p2Btn:"Получить Premium",
+    p3Name:"Enterprise API", p3Desc:"Для банков и брокерских домов", p3Per:"Годовая лицензия",
+    pf31:"Полный доступ к RESTful API", pf32:"White-label интеграция", pf33:"Гарантия SLA (99.9% uptime)", pf34:"Обучение кастомной модели ИИ", pf35:"Выделенный менеджер поддержки", pf36:"Интеграция с Jett / Kap Depo",
+    p3Btn:"Обсудить условия",
+    ctaEyebrow:"Начните Сегодня · Bugun Boshlang · Start Today",
+    ctaTitle:"Станьте <em>Умным Инвестором</em><br/>на Фондовом Рынке Узбекистана",
+    ctaBody:"Arbitra AI — это не просто инструмент. Это сообщество инвесторов, принимающих решения на основе данных на рынке капитала Узбекистана.",
+    ctaBtn1:"Начать бесплатно →", ctaBtn2:"B2B переговоры",
+    ctaNote:"Карта не требуется · Создано для Узбекистана · Официальные данные УЗБИРЖЕ",
+    footerDesc:"AI-powered платформа финансовой разведки для фондового рынка Узбекистана.",
+    footerDisc:"Эта платформа не предназначена для предоставления инвестиционных советов. Все сигналы и анализы носят информационный характер.",
+  },
+  en: {
+    heroBadge: "Uzbekistan Stock Exchange · Real-Time AI",
+    heroH1: 'The <em>Financial Brain</em><br/>for UZSE',
+    heroSub: "Analyze Uzbekistan stock exchange equities with AI. Read complex financial reports in seconds and receive precise investment signals.",
+    heroBtn1: "Start for free", heroBtn2: "▶ How it works",
+    stat1:"UZSE equities covered", stat2:"Analysis speed", stat3:"Signal accuracy",
+    probEyebrow:"The Problem / Muammo / Проблема",
+    probTitle:"The <em>Information Gap</em> in Uzbekistan's Market",
+    probBody:"Investors in Uzbekistan's capital market cannot make informed decisions with the data available today. Exchange data is fragmented and financial reports are impenetrably complex.",
+    pain1T:"100+ page PDF reports", pain1D:"Investors must read hundreds of pages of documents to understand a company's financial health. Arbitra AI does this in seconds.",
+    pain2T:"Data is not in one place", pain2D:"UZSE, MHNAT, Telegram channels, tax news — all separate. Arbitra AI unifies them into a single analytics panel.",
+    pain3T:"Opaque risk calculation", pain3D:"Dividend forecasts, P/E, debt-to-equity — ordinary investors cannot calculate these themselves. Our AI evaluates them automatically.",
+    featEyebrow:"Solution / Yechim / Решение", featTitle:'What Does <em>Arbitra AI</em> Do?',
+    featSub:"From collecting market data to generating investment signals — everything in one intelligent ecosystem.",
+    f1T:"Real-Time Data Feeds", f1B:"Auto-refreshing data stream from UZSE, government portals and financial Telegram channels, updated every 15 minutes.",
+    f2T:"AI PDF Analysis", f2B:"AI reads annual and quarterly reports in seconds and calculates 12 key financial ratios: P/E, P/B, ROE, ROA, Debt/Equity and more.",
+    f3T:"Visual Dashboard", f3B:"Interactive price charts, volume analysis, technical indicators (RSI, MACD, Bollinger Bands).",
+    f4T:"AI Signal Generation", f4B:"AI combining technical and fundamental analysis delivers precise BUY / HOLD / SELL signals with confidence levels.",
+    f5T:"Sentiment Analysis", f5B:"Measures market sentiment in real time from Uzbek-language news and Telegram channels.",
+    f6T:"B2B API Licensing", f6B:"RESTful API for brokerages and banks. Plug our analytics directly into Jett, Kap Depo and other trading platforms.",
+    demoEyebrow:"Live Demo / Jonli Namuna / Живой Пример", demoTitle:'Analysis: Savdo-Sanoat Qurilish Bank <em>(SQB)</em>',
+    demoSub:"UZSE:SQB · Uzbekistan's largest state-owned commercial bank. Analysis generated by Arbitra AI from the 2024 annual report.",
+    sqbL1:"Share price", sqbL2:"Market cap", sqbL3:"Total assets",
+    sqbL4:"Net profit (2023)", sqbL5:"Dividend yield", sqbL6:"52-week range",
+    sqbL7:"Capital adequacy (CAR)", sqbL8:"NPL ratio", sqbL9:"Sector", sqbL10:"Shareholders",
+    healthTitle:"AI Financial Health Scores",
+    g1:"Liquidity", g2:"Profitability", g3:"Capital Adequacy", g4:"Growth Trend", g5:"Risk Level",
+    ratiosTitle:"Key Financial Ratios",
+    aiAnalysisTitle:"Arbitra AI Verdict",
+    aiSummaryText:"SQB is one of Uzbekistan's strongest financial institutions, with 2023 net profit reaching 1.82 trln UZS (+18.4%). P/E=8.6× and P/B=1.2× indicate the stock is currently <strong style='color:var(--teal)'>undervalued</strong>. Dividend yield of 6.8% is among the highest in the market. Capital Adequacy Ratio of 14.2% (min. requirement 10%) confirms a solid capital base. Primary risk: 34% of the loan portfolio is directed toward government projects, creating political dependency.",
+    divTitle:"SQB Dividend History", targetBear:"Bear Case", targetBase:"Base Case", targetBull:"Bull Case",
+    targetLabel:"12-month price target (UZS) · Current price: 39,500",
+    howEyebrow:"How It Works / Jarayon / Процесс", howTitle:'How Does It <em>Work?</em>',
+    s1T:"Data Collection", s1B:"Automated scraping from UZSE API, government open-data portals, financial Telegram channels, and corporate websites. Updated every 15 minutes.",
+    s2T:"AI Analysis", s2B:"An LLM reads financial documents. Neural networks score company health across 50+ parameters and generate a signal.",
+    s3T:"Ready Signal", s3B:"Visual summaries, price targets, and confidence levels are delivered to the investor in plain language and pushed to trading apps via API.",
+    proof1:"UZSE Equities Covered", proof2:"Average Analysis Time", proof3:"Signal Accuracy (Backtested)", proof4:"B2B Pilot Partners",
+    priceEyebrow:"Pricing / Narxlar / Тарифы", priceTitle:'The Right <em>Plan</em> for You',
+    priceSub:"From individual retail investors to major brokerages — a solution for everyone.",
+    p1Name:"Standard", p1Desc:"For beginner investors", p1Per:"Forever free",
+    pf11:"127 stock quotes (delayed)", pf12:"Basic charts", pf13:"5 free AI signals per day", pf14:"Deep fundamental analysis", pf15:"PDF report analysis", pf16:"Sentiment monitoring",
+    p1Btn:"Start Free",
+    p2Name:"Premium AI", p2Desc:"For serious investors", p2Per:"/ month · billed annually",
+    pf21:"Real-time data (15-min)", pf22:"Unlimited AI signals + confidence levels", pf23:"Deep fundamental analysis (P/E, ROE, DCF)", pf24:"PDF report analysis — in seconds", pf25:"Sentiment & news analysis", pf26:"Portfolio risk calculation",
+    p2Btn:"Get Premium",
+    p3Name:"Enterprise API", p3Desc:"For banks & brokerages", p3Per:"Annual license",
+    pf31:"Full RESTful API access", pf32:"White-label integration", pf33:"SLA guarantee (99.9% uptime)", pf34:"Custom AI model training", pf35:"Dedicated support manager", pf36:"Jett / Kap Depo integration",
+    p3Btn:"Book a Call",
+    ctaEyebrow:"Start Today · Bugun Boshlang · Начните Сегодня",
+    ctaTitle:"Become a <em>Smart Investor</em><br/>on Uzbekistan's Stock Market",
+    ctaBody:"Arbitra AI is not just a tool. It's a community of data-driven investors on Uzbekistan's capital market.",
+    ctaBtn1:"Start for Free →", ctaBtn2:"B2B Inquiry",
+    ctaNote:"No card required · Built for Uzbekistan · Official UZSE data",
+    footerDesc:"AI-powered financial intelligence platform for the Uzbekistan stock exchange.",
+    footerDisc:"This platform is not intended to provide investment advice. All signals and analyses are for informational purposes only.",
+  }
+};
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.classList.toggle('light');
+  const btn = document.getElementById('themeToggle');
+  btn.querySelector('.theme-icon-sun').style.display = isLight ? '' : 'none';
+  btn.querySelector('.theme-icon-moon').style.display = isLight ? 'none' : '';
+  localStorage.setItem('arbitra-theme', isLight ? 'light' : 'dark');
+}
+
+const savedTheme = localStorage.getItem('arbitra-theme');
+if (savedTheme === 'light') {
+  document.documentElement.classList.add('light');
+  const btn = document.getElementById('themeToggle');
+  btn.querySelector('.theme-icon-sun').style.display = '';
+  btn.querySelector('.theme-icon-moon').style.display = 'none';
+}
+
+function setLang(lang) {
+  const c = content[lang];
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  const s = (id, html) => { const el = document.getElementById(id); if(el) el.innerHTML = html; };
+  s('hero-badge', c.heroBadge); s('hero-h1', c.heroH1); s('hero-sub', c.heroSub);
+  s('hero-btn1', c.heroBtn1); s('hero-btn2', c.heroBtn2);
+  s('stat1', c.stat1); s('stat2', c.stat2); s('stat3', c.stat3);
+  s('prob-eyebrow', c.probEyebrow); s('prob-title', c.probTitle); s('prob-body', c.probBody);
+  s('pain1-t', c.pain1T); s('pain1-d', c.pain1D); s('pain2-t', c.pain2T); s('pain2-d', c.pain2D);
+  s('pain3-t', c.pain3T); s('pain3-d', c.pain3D);
+  s('feat-eyebrow', c.featEyebrow); s('feat-title', c.featTitle); s('feat-sub', c.featSub);
+  s('f1-t', c.f1T); s('f1-b', c.f1B); s('f2-t', c.f2T); s('f2-b', c.f2B);
+  s('f3-t', c.f3T); s('f3-b', c.f3B); s('f4-t', c.f4T); s('f4-b', c.f4B);
+  s('f5-t', c.f5T); s('f5-b', c.f5B); s('f6-t', c.f6T); s('f6-b', c.f6B);
+  s('demo-eyebrow', c.demoEyebrow); s('demo-title', c.demoTitle); s('demo-sub', c.demoSub);
+  s('sqb-l1', c.sqbL1); s('sqb-l2', c.sqbL2); s('sqb-l3', c.sqbL3); s('sqb-l4', c.sqbL4);
+  s('sqb-l5', c.sqbL5); s('sqb-l6', c.sqbL6); s('sqb-l7', c.sqbL7); s('sqb-l8', c.sqbL8);
+  s('sqb-l9', c.sqbL9); s('sqb-l10', c.sqbL10);
+  s('health-title', c.healthTitle); s('g1', c.g1); s('g2', c.g2); s('g3', c.g3); s('g4', c.g4); s('g5', c.g5);
+  s('ratios-title', c.ratiosTitle); s('ai-analysis-title', c.aiAnalysisTitle);
+  s('ai-summary-text', c.aiSummaryText); s('div-title', c.divTitle);
+  s('target-bear', c.targetBear); s('target-base', c.targetBase); s('target-bull', c.targetBull);
+  s('target-label', c.targetLabel);
+  s('how-eyebrow', c.howEyebrow); s('how-title', c.howTitle);
+  s('s1-t', c.s1T); s('s1-b', c.s1B); s('s2-t', c.s2T); s('s2-b', c.s2B); s('s3-t', c.s3T); s('s3-b', c.s3B);
+  s('proof1', c.proof1); s('proof2', c.proof2); s('proof3', c.proof3); s('proof4', c.proof4);
+  s('price-eyebrow', c.priceEyebrow); s('price-title', c.priceTitle); s('price-sub', c.priceSub);
+  s('p1-name', c.p1Name); s('p1-desc', c.p1Desc); s('p1-per', c.p1Per);
+  s('pf1-1', c.pf11); s('pf1-2', c.pf12); s('pf1-3', c.pf13); s('pf1-4', c.pf14); s('pf1-5', c.pf15); s('pf1-6', c.pf16);
+  s('p1-btn', c.p1Btn);
+  s('p2-name', c.p2Name); s('p2-desc', c.p2Desc); s('p2-per', c.p2Per);
+  s('pf2-1', c.pf21); s('pf2-2', c.pf22); s('pf2-3', c.pf23); s('pf2-4', c.pf24); s('pf2-5', c.pf25); s('pf2-6', c.pf26);
+  s('p2-btn', c.p2Btn);
+  s('p3-name', c.p3Name); s('p3-desc', c.p3Desc); s('p3-per', c.p3Per);
+  s('pf3-1', c.pf31); s('pf3-2', c.pf32); s('pf3-3', c.pf33); s('pf3-4', c.pf34); s('pf3-5', c.pf35); s('pf3-6', c.pf36);
+  s('p3-btn', c.p3Btn);
+  s('cta-eyebrow', c.ctaEyebrow); s('cta-title', c.ctaTitle); s('cta-body', c.ctaBody);
+  s('cta-btn1', c.ctaBtn1); s('cta-btn2', c.ctaBtn2); s('cta-note', c.ctaNote);
+  s('footer-desc', c.footerDesc); s('footer-disc', c.footerDisc);
+}
+
+// ─── SCROLL ANIMATIONS ──────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ─── CHART ──────────────────────────────────────────────────────────────────
+const chartData = {
+  '1M': [36800,37200,36500,37800,38200,37900,38500,39100,38700,39200,38900,39500,39100,39800,39500,40100,39700,40300,39900,40500,39800,40200,39500],
+  '3M': [33200,33800,34500,34100,35200,35800,36100,35700,36500,37200,36800,37500,38200,37900,38700,39100,38500,39200,38900,39500,40100,39800,40300],
+  '6M': [29500,30200,31500,30800,32200,33100,32700,34200,35100,34600,36200,35800,37100,36700,37900,38400,38100,39000,38700,39500,40200,39800,40500],
+  '1Y': [22000,23500,24800,26200,25100,27400,28900,27600,29800,31200,30500,32400,33800,32100,34500,35900,34600,36800,38200,37500,39100,38700,39500]
+};
+
+let chartInstance = null;
+
+function drawChart(key) {
+  const canvas = document.getElementById('mainChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const data = chartData[key];
+  const W = canvas.offsetWidth || 500;
+  const H = 200;
+  canvas.width = W; canvas.height = H;
+
+  const min = Math.min(...data) * 0.995;
+  const max = Math.max(...data) * 1.005;
+  const pts = data.map((v,i) => ({
+    x: (i / (data.length-1)) * (W - 40) + 20,
+    y: H - 24 - ((v - min) / (max - min)) * (H - 48)
+  }));
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(200,169,110,0.08)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = 24 + (i / 4) * (H - 48);
+    ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(W-20, y); ctx.stroke();
+  }
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, 'rgba(0,191,165,0.18)');
+  grad.addColorStop(1, 'rgba(0,191,165,0)');
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  pts.forEach((p,i) => { if(i>0) ctx.lineTo(p.x, p.y); });
+  ctx.lineTo(pts[pts.length-1].x, H-24);
+  ctx.lineTo(pts[0].x, H-24);
+  ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  pts.forEach((p,i) => { if(i>0) ctx.lineTo(p.x, p.y); });
+  ctx.strokeStyle = '#00bfa5'; ctx.lineWidth = 2; ctx.stroke();
+
+  // Last point dot
+  const last = pts[pts.length-1];
+  ctx.beginPath(); ctx.arc(last.x, last.y, 4, 0, Math.PI*2);
+  ctx.fillStyle = '#00bfa5'; ctx.fill();
+
+  // Price labels
+  ctx.fillStyle = 'rgba(138,155,176,0.8)';
+  ctx.font = '10px DM Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText((max/1000).toFixed(1)+'K', 18, 28);
+  ctx.fillText((min/1000).toFixed(1)+'K', 18, H-18);
+}
+
+function switchChart(key, btn) {
+  document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawChart(key);
+}
+
+window.addEventListener('load', () => {
+  setTimeout(() => drawChart('1M'), 300);
+});
+window.addEventListener('resize', () => drawChart(
+  document.querySelector('.chart-btn.active')?.textContent === '1O' ? '1M' :
+  document.querySelector('.chart-btn.active')?.textContent === '3O' ? '3M' :
+  document.querySelector('.chart-btn.active')?.textContent === '6O' ? '6M' : '1Y'
+));
+</script>
+</body>
+</html>
+

@@ -1,0 +1,14 @@
+node_modules/
+backend/frontend/parser/node_modules/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+*.sqlite3
+.env
+staticfiles/
+media/
+__pycache__/
+*.pyc
+.venv/
+.idea/

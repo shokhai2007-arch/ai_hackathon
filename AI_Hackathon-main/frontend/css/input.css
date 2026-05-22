@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dark-mode body,
+.dark-mode {
+    background-color: #000 !important;
+}
+
+.dark-mode aside,
+.dark-mode main,
+.dark-mode header,
+.dark-mode footer {
+    background-color: #000 !important;
+    border-color: #222 !important;
+}
+
+.dark-mode .text-gray-400,
+.dark-mode .text-gray-500,
+.dark-mode .text-gray-600,
+.dark-mode .text-gray-700,
+.dark-mode .text-gray-800,
+.dark-mode .text-gray-900,
+.dark-mode .text-black {
+    color: #fff !important;
+}
+
+.dark-mode .sidebar-btn:hover {
+    background-color: #1f2937 !important;
+}
